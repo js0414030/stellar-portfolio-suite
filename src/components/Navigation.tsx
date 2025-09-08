@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Github, Linkedin, Mail, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -72,6 +73,7 @@ const Navigation = () => {
 
           {/* Social Links & CTA */}
           <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
             <a
               href="https://github.com"
               target="_blank"
@@ -126,6 +128,7 @@ const Navigation = () => {
                 </Link>
               ))}
               <div className="flex items-center space-x-4 px-3 pt-4">
+                <ThemeToggle />
                 <a
                   href="https://github.com"
                   target="_blank"
