@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/hooks/useTheme";
 import Navigation from "./components/Navigation";
 import { ScrollProgress } from "./components/ScrollProgress";
 import { BackToTop } from "./components/BackToTop";
-import Home from "./pages/Home";
+import Index from "./pages/Index";
 import About from "./pages/About";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
@@ -29,9 +29,9 @@ const App = () => (
         <BrowserRouter>
           <ScrollProgress />
           <Navigation />
-          <main className="relative">
+          <main className="relative pt-16">
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/projects/:id" element={<ProjectDetail />} />
