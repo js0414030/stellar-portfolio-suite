@@ -212,117 +212,119 @@ const Experience = () => {
           </div>
 
           <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-8 md:left-1/2 md:transform md:-translate-x-0.5 top-0 bottom-0 w-0.5 bg-gradient-primary opacity-30" />
+            {/* Timeline line - hidden on mobile for cleaner look */}
+            <div className="hidden md:block absolute left-1/2 transform -translate-x-0.5 top-0 bottom-0 w-0.5 bg-gradient-primary opacity-30" />
 
-            <div className="space-y-12">
+            <div className="space-y-8 md:space-y-16">
               {experiences.map((exp, index) => (
                 <div 
                   key={exp.id}
-                  className={`relative flex flex-col md:flex-row items-start ${
-                    index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                  } reveal`}
+                  className="relative reveal"
                   style={{ animationDelay: `${index * 0.2}s` }}
                 >
-                  {/* Timeline node */}
-                  <div className="flex-shrink-0 w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center absolute left-0 md:left-1/2 md:transform md:-translate-x-1/2 z-10">
-                    <Building className="w-6 h-6 text-primary-foreground" />
+                  {/* Timeline node - centered on desktop, left-aligned on mobile */}
+                  <div className="flex-shrink-0 w-12 h-12 md:w-16 md:h-16 bg-gradient-primary rounded-full flex items-center justify-center absolute left-4 md:left-1/2 md:transform md:-translate-x-1/2 top-6 z-10 shadow-lg">
+                    <Building className="w-4 h-4 md:w-6 md:h-6 text-primary-foreground" />
                   </div>
                   
-                  {/* Content */}
-                  <div className={`flex-1 ml-24 md:ml-0 ${
-                    index % 2 === 0 ? 'md:mr-8' : 'md:ml-8'
-                  } max-w-lg`}>
-                    <Card className="glass border-primary/20 hover:border-primary/40 transition-all duration-300">
-                      <CardHeader className="pb-4">
-                        <div className="flex items-start justify-between">
-                          <div className="space-y-1">
-                            <CardTitle className="text-xl">{exp.title}</CardTitle>
-                            <div className="flex items-center space-x-2 text-primary font-medium">
-                              <Building className="w-4 h-4" />
-                              <span>{exp.company}</span>
-                            </div>
-                            <div className="flex flex-col md:flex-row md:items-center md:space-x-4 text-sm text-muted-foreground">
-                              <div className="flex items-center space-x-1">
-                                <Calendar className="w-4 h-4" />
-                                <span>{exp.period}</span>
+                  {/* Content - responsive layout */}
+                  <div className={`w-full md:w-1/2 ${
+                    index % 2 === 0 
+                      ? 'md:pr-8 md:ml-0' 
+                      : 'md:pl-8 md:ml-1/2'
+                  }`}>
+                    <div className="ml-20 md:ml-0">
+                      <Card className="glass border-primary/20 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10">
+                        <CardHeader className="pb-4">
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                            <div className="space-y-2 flex-1">
+                              <CardTitle className="text-lg md:text-xl leading-tight">{exp.title}</CardTitle>
+                              <div className="flex items-center space-x-2 text-primary font-medium text-sm">
+                                <Building className="w-4 h-4 flex-shrink-0" />
+                                <span>{exp.company}</span>
                               </div>
-                              <div className="flex items-center space-x-1">
-                                <MapPin className="w-4 h-4" />
-                                <span>{exp.location}</span>
+                              <div className="flex flex-col space-y-1 text-sm text-muted-foreground">
+                                <div className="flex items-center space-x-2">
+                                  <Calendar className="w-4 h-4 flex-shrink-0" />
+                                  <span>{exp.period}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <MapPin className="w-4 h-4 flex-shrink-0" />
+                                  <span>{exp.location}</span>
+                                </div>
                               </div>
                             </div>
+                            <Badge variant="outline" className="self-start">{exp.type}</Badge>
                           </div>
-                          <Badge variant="outline">{exp.type}</Badge>
-                        </div>
-                      </CardHeader>
+                        </CardHeader>
 
-                      <CardContent className="space-y-4">
-                        <p className="text-muted-foreground">{exp.description}</p>
+                        <CardContent className="space-y-4 pt-0">
+                          <p className="text-muted-foreground leading-relaxed">{exp.description}</p>
 
-                        {/* Technologies */}
-                        <div className="flex flex-wrap gap-1">
-                          {exp.technologies.map((tech) => (
-                            <Badge key={tech} variant="secondary" className="text-xs glass">
-                              {tech}
-                            </Badge>
-                          ))}
-                        </div>
+                          {/* Technologies */}
+                          <div className="flex flex-wrap gap-1.5">
+                            {exp.technologies.map((tech) => (
+                              <Badge key={tech} variant="secondary" className="text-xs glass px-2 py-1">
+                                {tech}
+                              </Badge>
+                            ))}
+                          </div>
 
-                        {/* Expandable content */}
-                        <div className="space-y-4">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => toggleExpanded(index)}
-                            className="h-auto p-0 text-primary hover:text-primary/80"
-                          >
-                            {expandedItems.has(index) ? (
-                              <>
-                                <ChevronUp className="w-4 h-4 mr-1" />
-                                Show Less
-                              </>
-                            ) : (
-                              <>
-                                <ChevronDown className="w-4 h-4 mr-1" />
-                                Show More Details
-                              </>
+                          {/* Expandable content */}
+                          <div className="space-y-3">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => toggleExpanded(index)}
+                              className="h-auto p-2 text-primary hover:text-primary/80 hover:bg-primary/10 rounded-md transition-colors"
+                            >
+                              {expandedItems.has(index) ? (
+                                <>
+                                  <ChevronUp className="w-4 h-4 mr-2" />
+                                  Show Less
+                                </>
+                              ) : (
+                                <>
+                                  <ChevronDown className="w-4 h-4 mr-2" />
+                                  Show More Details
+                                </>
+                              )}
+                            </Button>
+
+                            {expandedItems.has(index) && (
+                              <div className="space-y-4 animate-fade-in border-t border-border/50 pt-4">
+                                <div>
+                                  <h4 className="font-semibold mb-3 flex items-center text-sm">
+                                    <Award className="w-4 h-4 mr-2 text-primary flex-shrink-0" />
+                                    Key Achievements
+                                  </h4>
+                                  <ul className="space-y-2 text-sm text-muted-foreground">
+                                    {exp.achievements.map((achievement, i) => (
+                                      <li key={i} className="flex items-start space-x-3">
+                                        <div className="w-1.5 h-1.5 bg-gradient-primary rounded-full mt-2 flex-shrink-0" />
+                                        <span className="leading-relaxed">{achievement}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+
+                                <div>
+                                  <h4 className="font-semibold mb-3 text-sm">Key Responsibilities</h4>
+                                  <ul className="space-y-2 text-sm text-muted-foreground">
+                                    {exp.responsibilities.map((responsibility, i) => (
+                                      <li key={i} className="flex items-start space-x-3">
+                                        <div className="w-1.5 h-1.5 bg-secondary rounded-full mt-2 flex-shrink-0" />
+                                        <span className="leading-relaxed">{responsibility}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
                             )}
-                          </Button>
-
-                          {expandedItems.has(index) && (
-                            <div className="space-y-4 animate-fade-in">
-                              <div>
-                                <h4 className="font-semibold mb-2 flex items-center">
-                                  <Award className="w-4 h-4 mr-2 text-primary" />
-                                  Key Achievements
-                                </h4>
-                                <ul className="space-y-1 text-sm text-muted-foreground">
-                                  {exp.achievements.map((achievement, i) => (
-                                    <li key={i} className="flex items-start space-x-2">
-                                      <div className="w-1.5 h-1.5 bg-gradient-primary rounded-full mt-2 flex-shrink-0" />
-                                      <span>{achievement}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-
-                              <div>
-                                <h4 className="font-semibold mb-2">Key Responsibilities</h4>
-                                <ul className="space-y-1 text-sm text-muted-foreground">
-                                  {exp.responsibilities.map((responsibility, i) => (
-                                    <li key={i} className="flex items-start space-x-2">
-                                      <div className="w-1.5 h-1.5 bg-secondary rounded-full mt-2 flex-shrink-0" />
-                                      <span>{responsibility}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -340,33 +342,35 @@ const Experience = () => {
               <div className="reveal">
                 <h3 className="text-2xl font-bold mb-6">Education</h3>
                 {education.map((edu, index) => (
-                  <Card key={index} className="glass border-primary/20">
+                  <Card key={index} className="glass border-primary/20 hover:border-primary/40 transition-all duration-300">
                     <CardContent className="p-6">
-                      <div className="space-y-3">
-                        <h4 className="text-lg font-semibold">{edu.degree}</h4>
+                      <div className="space-y-4">
+                        <h4 className="text-lg font-semibold leading-tight">{edu.degree}</h4>
                         <div className="flex items-center space-x-2 text-primary font-medium">
-                          <Building className="w-4 h-4" />
+                          <Building className="w-4 h-4 flex-shrink-0" />
                           <span>{edu.school}</span>
                         </div>
-                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                          <div className="flex items-center space-x-1">
-                            <Calendar className="w-4 h-4" />
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center space-x-2">
+                            <Calendar className="w-4 h-4 flex-shrink-0" />
                             <span>{edu.period}</span>
                           </div>
-                          <div className="flex items-center space-x-1">
-                            <MapPin className="w-4 h-4" />
+                          <div className="flex items-center space-x-2">
+                            <MapPin className="w-4 h-4 flex-shrink-0" />
                             <span>{edu.location}</span>
                           </div>
-                          <Badge variant="outline">GPA: {edu.gpa}</Badge>
+                          <Badge variant="outline" className="w-fit">GPA: {edu.gpa}</Badge>
                         </div>
-                        <ul className="space-y-1 text-sm text-muted-foreground">
-                          {edu.achievements.map((achievement, i) => (
-                            <li key={i} className="flex items-start space-x-2">
-                              <div className="w-1.5 h-1.5 bg-gradient-primary rounded-full mt-2 flex-shrink-0" />
-                              <span>{achievement}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        <div className="pt-2">
+                          <ul className="space-y-2 text-sm text-muted-foreground">
+                            {edu.achievements.map((achievement, i) => (
+                              <li key={i} className="flex items-start space-x-3">
+                                <div className="w-1.5 h-1.5 bg-gradient-primary rounded-full mt-2 flex-shrink-0" />
+                                <span className="leading-relaxed">{achievement}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -382,21 +386,23 @@ const Experience = () => {
                   {certifications.map((cert, index) => (
                     <Card 
                       key={index} 
-                      className="glass border-primary/20 hover:border-primary/40 transition-all duration-300"
+                      className="glass border-primary/20 hover:border-primary/40 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10"
                     >
                       <CardContent className="p-6">
-                        <div className="flex items-start justify-between">
-                          <div className="space-y-2">
-                            <h4 className="font-semibold">{cert.name}</h4>
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                          <div className="space-y-2 flex-1">
+                            <h4 className="font-semibold leading-tight">{cert.name}</h4>
                             <p className="text-sm text-primary font-medium">{cert.issuer}</p>
-                            <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                              <Calendar className="w-3 h-3" />
-                              <span>{cert.date}</span>
-                              <span>•</span>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-xs text-muted-foreground">
+                              <div className="flex items-center space-x-1">
+                                <Calendar className="w-3 h-3 flex-shrink-0" />
+                                <span>{cert.date}</span>
+                              </div>
+                              <span className="hidden sm:inline">•</span>
                               <span>ID: {cert.id}</span>
                             </div>
                           </div>
-                          <Badge variant="secondary" className="glass">
+                          <Badge variant="secondary" className="glass w-fit">
                             <Award className="w-3 h-3 mr-1" />
                             Certified
                           </Badge>
