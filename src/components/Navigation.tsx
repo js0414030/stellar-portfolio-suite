@@ -94,9 +94,12 @@ const Navigation = () => {
               variant="outline" 
               size="sm"
               className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+              asChild
             >
-              <Download className="w-4 h-4 mr-2" />
-              Resume
+              <a href="/resume.pdf" download>
+                <Download className="w-4 h-4 mr-2" />
+                Resume
+              </a>
             </Button>
           </div>
 
@@ -111,14 +114,14 @@ const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg border-b border-border shadow-elegant z-50">
+          <div className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg border-b border-border shadow-elegant animate-fade-in z-40">
             <div className="px-4 py-6 space-y-4">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
-                  className={`block px-3 py-2 text-base font-medium transition-colors duration-300 ${
+                  className={`block px-3 py-2 text-base font-medium transition-all duration-300 hover:translate-x-2 ${
                     isActivePath(item.path)
                       ? 'text-primary bg-primary/10 rounded-lg'
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted/20 rounded-lg'
@@ -127,13 +130,14 @@ const Navigation = () => {
                   {item.name}
                 </Link>
               ))}
-              <div className="flex items-center space-x-4 px-3 pt-4">
+              <div className="flex items-center space-x-4 px-3 pt-4 border-t border-border/20">
                 <ThemeToggle />
                 <a
                   href="https://github.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors duration-300"
+                  className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
+                  aria-label="GitHub Profile"
                 >
                   <Github className="w-5 h-5" />
                 </a>
@@ -141,7 +145,8 @@ const Navigation = () => {
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors duration-300"
+                  className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
+                  aria-label="LinkedIn Profile"
                 >
                   <Linkedin className="w-5 h-5" />
                 </a>
@@ -149,9 +154,12 @@ const Navigation = () => {
                   variant="outline" 
                   size="sm"
                   className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+                  asChild
                 >
-                  <Download className="w-4 h-4 mr-2" />
-                  Resume
+                  <a href="/resume.pdf" download>
+                    <Download className="w-4 h-4 mr-2" />
+                    Resume
+                  </a>
                 </Button>
               </div>
             </div>

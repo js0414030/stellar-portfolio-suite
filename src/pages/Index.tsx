@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowDown, Github, Linkedin, Mail, Download, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import SEOHead from '@/components/SEOHead';
 
 const Index = () => {
   const [typedText, setTypedText] = useState('');
@@ -32,7 +33,14 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <>
+      <SEOHead 
+        title="Alex Chen - Full Stack Developer & Designer"
+        description="Passionate full stack developer with 5+ years of experience building scalable web applications. Specializing in React, Node.js, TypeScript, and modern web technologies."
+        keywords="full stack developer, react developer, typescript, node.js, web developer, ui/ux designer, portfolio"
+        url="https://alexchen.dev"
+      />
+      <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Animated Background */}
@@ -94,17 +102,23 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="bg-gradient-primary hover:shadow-glow transition-all duration-300 group"
+                asChild
               >
-                <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                View My Work
+                <a href="/projects">
+                  <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+                  View My Work
+                </a>
               </Button>
               <Button 
                 variant="outline" 
                 size="lg"
                 className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+                asChild
               >
-                <Download className="w-5 h-5 mr-2" />
-                Download Resume
+                <a href="/resume.pdf" download>
+                  <Download className="w-5 h-5 mr-2" />
+                  Download Resume
+                </a>
               </Button>
             </div>
 
@@ -169,6 +183,7 @@ const Index = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

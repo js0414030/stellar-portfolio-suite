@@ -133,8 +133,10 @@ const About = () => {
                 </Badge>
               </div>
 
-              <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300">
-                Download Resume
+              <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300" asChild>
+                <a href="/resume.pdf" download>
+                  Download Resume
+                </a>
               </Button>
             </div>
 

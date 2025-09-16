@@ -203,10 +203,23 @@
 
   ::-webkit-scrollbar-thumb {
     @apply bg-muted rounded-full;
+    transition: var(--transition-smooth);
   }
 
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground;
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  /* Text selection */
+  ::selection {
+    background: hsl(var(--primary) / 0.2);
+    color: hsl(var(--primary-foreground));
   }
 }
 
@@ -216,11 +229,22 @@
     background: var(--gradient-glass);
     backdrop-filter: blur(12px);
     border: 1px solid hsl(var(--border));
-    transition: all 0.3s ease;
+    transition: var(--transition-smooth);
+  }
+  
+  .glass:hover {
+    border-color: hsl(var(--border) / 0.6);
+    background: linear-gradient(135deg, 
+      hsla(var(--primary) / 0.05) 0%, 
+      hsla(var(--primary) / 0.02) 100%);
   }
   
   .dark .glass {
     border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .dark .glass:hover {
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   /* Gradient text */
@@ -261,12 +285,22 @@
   .reveal {
     opacity: 0;
     transform: translateY(40px);
-    transition: all 0.8s ease-out;
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
   }
 
   .reveal.revealed {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  /* Smooth focus states */
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    transition: var(--transition-smooth);
   }
 
   /* Skill progress bars */
@@ -313,6 +347,20 @@
     * {
       transition: none !important;
     }
+    
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+
+  /* Ensure proper stacking contexts */
+  .fixed {
+    z-index: 50;
+  }
+
+  .relative {
+    z-index: 1;
   }
 
   /* Page transition animations */
