@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import SEOHead from '@/components/SEOHead';
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -50,7 +51,15 @@ const Admin = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-16 bg-surface/20">
+    <>
+      <SEOHead 
+        title="Admin Dashboard"
+        description="Portfolio administration panel"
+        keywords="admin, dashboard, portfolio management"
+        url="https://alexchen.dev/admin"
+      />
+      <div className="min-h-screen bg-surface/20">
+        <div className="pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -327,8 +336,10 @@ const Admin = () => {
             </div>
           </TabsContent>
         </Tabs>
+        </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

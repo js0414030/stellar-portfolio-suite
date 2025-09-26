@@ -171,7 +171,8 @@ const Experience = () => {
         keywords="experience, career, full stack developer, professional journey, work history, alex chen"
         url="https://alexchen.dev/experience"
       />
-      <div className="min-h-screen pt-16">
+      <div className="min-h-screen">
+        <div className="pt-16">
         {/* Hero Section */}
         <section className="py-20 bg-gradient-hero/10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -418,6 +419,7 @@ const Experience = () => {
           </div>
           </div>
         </section>
+        </div>
       </div>
     </>
   );

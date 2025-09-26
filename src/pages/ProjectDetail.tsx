@@ -3,6 +3,7 @@ import { ArrowLeft, Github, ExternalLink, Calendar, User, Code, Lightbulb } from
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import SEOHead from '@/components/SEOHead';
 
 const ProjectDetail = () => {
   const { id } = useParams();
@@ -60,7 +61,15 @@ Key features include user authentication, shopping cart functionality, order man
   }
 
   return (
-    <div className="min-h-screen pt-16">
+    <>
+      <SEOHead 
+        title={`${project.title} - Project Details`}
+        description={project.description}
+        keywords={`${project.tags.join(', ')}, project details, case study`}
+        url={`https://alexchen.dev/projects/${id}`}
+      />
+      <div className="min-h-screen">
+        <div className="pt-16">
       {/* Hero Section */}
       <section className="py-12 bg-gradient-hero/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -271,9 +280,11 @@ Key features include user authentication, shopping cart functionality, order man
               </Card>
             </div>
           </div>
+          </div>
+        </section>
         </div>
-      </section>
-    </div>
+      </div>
+    </>
   );
 };
 

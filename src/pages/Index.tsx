@@ -41,8 +41,8 @@ const Index = () => {
         url="https://alexchen.dev"
       />
       <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Hero Section */}
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 hero-pattern opacity-20" />
         <div className="absolute inset-0 bg-gradient-hero opacity-30" />
@@ -156,8 +156,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Quick Stats Section */}
-      <section className="py-20 bg-surface/50">
+        {/* Quick Stats Section */}
+        <section className="py-20 bg-surface/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -180,9 +180,9 @@ const Index = () => {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-    </div>
+          </div>
+        </section>
+      </div>
     </>
   );
 };

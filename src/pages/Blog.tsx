@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 
 const Blog = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -112,7 +113,15 @@ const Blog = () => {
   const regularPosts = filteredPosts.filter(post => !post.featured);
 
   return (
-    <div className="min-h-screen pt-16">
+    <>
+      <SEOHead 
+        title="Blog - Alex Chen"
+        description="Read my latest thoughts on web development, technology trends, and programming tutorials. Insights from a full stack developer's journey."
+        keywords="blog, web development, programming, tutorials, technology, react, javascript, alex chen"
+        url="https://alexchen.dev/blog"
+      />
+      <div className="min-h-screen">
+        <div className="pt-16">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-hero/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -383,9 +392,11 @@ const Blog = () => {
               </p>
             </div>
           )}
+          </div>
+        </section>
         </div>
-      </section>
-    </div>
+      </div>
+    </>
   );
 };
 

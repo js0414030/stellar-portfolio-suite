@@ -3,6 +3,7 @@ import { Calendar, MapPin, Award, Users, Code, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import SEOHead from '@/components/SEOHead';
 
 const About = () => {
   const skillsRef = useRef<HTMLDivElement>(null);
@@ -90,7 +91,15 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-16">
+    <>
+      <SEOHead 
+        title="About - Alex Chen"
+        description="Learn about Alex Chen, a passionate full stack developer with 5+ years of experience building scalable web applications and digital solutions."
+        keywords="about, full stack developer, experience, skills, background, alex chen"
+        url="https://alexchen.dev/about"
+      />
+      <div className="min-h-screen">
+        <div className="pt-16">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-hero/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -260,9 +269,11 @@ const About = () => {
               </Card>
             ))}
           </div>
+          </div>
+        </section>
         </div>
-      </section>
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import SEOHead from '@/components/SEOHead';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -104,7 +105,15 @@ const Contact = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-16">
+    <>
+      <SEOHead 
+        title="Contact - Alex Chen"
+        description="Get in touch with Alex Chen for freelance projects, collaborations, or consulting opportunities. Available for full stack development work."
+        keywords="contact, hire, freelance, full stack developer, collaboration, alex chen"
+        url="https://alexchen.dev/contact"
+      />
+      <div className="min-h-screen">
+        <div className="pt-16">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-hero/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -331,9 +340,11 @@ const Contact = () => {
               </Card>
             </div>
           </div>
+          </div>
+        </section>
         </div>
-      </section>
-    </div>
+      </div>
+    </>
   );
 };
 

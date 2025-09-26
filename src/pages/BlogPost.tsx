@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar, Clock, User, Tag, Share2, Bookmark } from 'lucide-
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import SEOHead from '@/components/SEOHead';
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -328,7 +329,15 @@ Happy coding!
   }
 
   return (
-    <div className="min-h-screen pt-16">
+    <>
+      <SEOHead 
+        title={post.title}
+        description={post.excerpt}
+        keywords={post.tags.join(', ')}
+        url={`https://alexchen.dev/blog/${slug}`}
+      />
+      <div className="min-h-screen">
+        <div className="pt-16">
       {/* Article Header */}
       <section className="py-12 bg-gradient-hero/10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -560,9 +569,11 @@ Happy coding!
               </Card>
             </aside>
           </div>
+          </div>
+        </section>
         </div>
-      </section>
-    </div>
+      </div>
+    </>
   );
 };
 

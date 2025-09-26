@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
+import SEOHead from '@/components/SEOHead';
 
 const Projects = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -96,7 +97,15 @@ const Projects = () => {
   });
 
   return (
-    <div className="min-h-screen">
+    <>
+      <SEOHead 
+        title="Projects - Alex Chen"
+        description="Explore my portfolio of full stack development projects, including e-commerce platforms, web applications, and innovative digital solutions built with modern technologies."
+        keywords="projects, portfolio, full stack development, react projects, web applications, alex chen"
+        url="https://alexchen.dev/projects"
+      />
+      <div className="min-h-screen">
+        <div className="pt-16">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-hero/10 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -281,9 +290,11 @@ const Projects = () => {
               </p>
             </div>
           )}
+          </div>
+        </section>
         </div>
-      </section>
-    </div>
+      </div>
+    </>
   );
 };
 
