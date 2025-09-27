@@ -4,9 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import SEOHead from '@/components/SEOHead';
+import { useExperiences, useEducation, useCertifications } from '@/hooks/useExperience';
 
 const Experience = () => {
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set([0]));
+  
+  const { experiences, loading: experiencesLoading, error: experiencesError } = useExperiences();
+  const { education, loading: educationLoading, error: educationError } = useEducation();
+  const { certifications, loading: certificationsLoading, error: certificationsError } = useCertifications();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -36,132 +41,30 @@ const Experience = () => {
     setExpandedItems(newExpanded);
   };
 
-  const experiences = [
-    {
-      id: 1,
-      title: 'Senior Full Stack Developer',
-      company: 'TechFlow Inc.',
-      location: 'San Francisco, CA',
-      period: '2024 - Present',
-      type: 'Full-time',
-      description: 'Leading development of scalable web applications serving 100K+ users',
-      achievements: [
-        'Led a team of 6 developers in building a multi-tenant SaaS platform',
-        'Reduced application load time by 60% through optimization and caching strategies',
-        'Implemented CI/CD pipelines reducing deployment time from 2 hours to 15 minutes',
-        'Mentored 3 junior developers and conducted technical interviews'
-      ],
-      technologies: ['React', 'TypeScript', 'Node.js', 'AWS', 'Docker', 'PostgreSQL'],
-      responsibilities: [
-        'Architecture design and technical decision making',
-        'Code review and quality assurance',
-        'Performance optimization and scalability planning',
-        'Team leadership and mentoring'
-      ]
-    },
-    {
-      id: 2,
-      title: 'Full Stack Developer',
-      company: 'StartupHub',
-      location: 'San Francisco, CA',
-      period: '2022 - 2024',
-      type: 'Full-time',
-      description: 'Built MVP for 3 successful startups using React and Node.js',
-      achievements: [
-        'Developed 3 successful MVP applications that secured $2M+ in funding',
-        'Built real-time collaboration features using WebSocket technology',
-        'Implemented OAuth integrations with Google, Microsoft, and Slack',
-        'Created automated testing suites achieving 90%+ code coverage'
-      ],
-      technologies: ['React', 'Vue.js', 'Node.js', 'Express', 'MongoDB', 'Redis'],
-      responsibilities: [
-        'Full-stack application development',
-        'Database design and optimization',
-        'API development and integration',
-        'User interface design and implementation'
-      ]
-    },
-    {
-      id: 3,
-      title: 'Frontend Developer',
-      company: 'Digital Agency Pro',
-      location: 'Los Angeles, CA',
-      period: '2021 - 2022',
-      type: 'Full-time',
-      description: 'Created responsive websites for Fortune 500 companies',
-      achievements: [
-        'Delivered 15+ responsive websites for Fortune 500 clients',
-        'Improved website performance scores by average of 40%',
-        'Implemented accessibility features meeting WCAG 2.1 AA standards',
-        'Created component library used across 20+ projects'
-      ],
-      technologies: ['React', 'SASS', 'JavaScript', 'Webpack', 'Figma'],
-      responsibilities: [
-        'Frontend development and optimization',
-        'Component library development',
-        'Cross-browser compatibility testing',
-        'Client communication and requirement gathering'
-      ]
-    },
-    {
-      id: 4,
-      title: 'Junior Web Developer',
-      company: 'Creative Solutions',
-      location: 'Remote',
-      period: '2020 - 2021',
-      type: 'Full-time',
-      description: 'Developed interactive web applications and landing pages',
-      achievements: [
-        'Built 25+ landing pages with average conversion rate of 15%',
-        'Developed custom WordPress themes and plugins',
-        'Implemented Google Analytics and tag management',
-        'Collaborated with design team on 10+ e-commerce projects'
-      ],
-      technologies: ['HTML', 'CSS', 'JavaScript', 'WordPress', 'PHP'],
-      responsibilities: [
-        'Website development and maintenance',
-        'WordPress theme customization',
-        'Bug fixing and feature implementation',
-        'Client support and training'
-      ]
-    }
-  ];
+  const loading = experiencesLoading || educationLoading || certificationsLoading;
+  const error = experiencesError || educationError || certificationsError;
 
-  const education = [
-    {
-      degree: 'Bachelor of Science in Computer Science',
-      school: 'Stanford University',
-      location: 'Stanford, CA',
-      period: '2016 - 2020',
-      gpa: '3.8/4.0',
-      achievements: [
-        'Magna Cum Laude graduate',
-        'President of Computer Science Student Association',
-        'Published research on machine learning algorithms'
-      ]
-    }
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading experience...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const certifications = [
-    {
-      name: 'AWS Solutions Architect',
-      issuer: 'Amazon Web Services',
-      date: '2023',
-      id: 'SAA-C03'
-    },
-    {
-      name: 'Professional Scrum Master',
-      issuer: 'Scrum.org',
-      date: '2022',
-      id: 'PSM I'
-    },
-    {
-      name: 'Google Analytics Certified',
-      issuer: 'Google',
-      date: '2021',
-      id: 'GAIQ'
-    }
-  ];
+  if (error) {
+    return (
+      <div className="min-h-screen pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-destructive mb-4">Error loading experience: {error}</p>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -362,7 +265,7 @@ const Experience = () => {
                             <MapPin className="w-4 h-4 flex-shrink-0" />
                             <span>{edu.location}</span>
                           </div>
-                          <Badge variant="outline" className="w-fit">GPA: {edu.gpa}</Badge>
+                          {edu.gpa && <Badge variant="outline" className="w-fit">GPA: {edu.gpa}</Badge>}
                         </div>
                         <div className="pt-2">
                           <ul className="space-y-2 text-sm text-muted-foreground">
