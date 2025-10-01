@@ -7,42 +7,34 @@ import SEOHead from '@/components/SEOHead';
 import { useExperiences, useEducation, useCertifications } from '@/hooks/useExperience';
 
 const Experience = () => {
-  console.log('Experience component rendering...');
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set([0]));
   
   const { experiences, loading: experiencesLoading, error: experiencesError } = useExperiences();
   const { education, loading: educationLoading, error: educationError } = useEducation();
   const { certifications, loading: certificationsLoading, error: certificationsError } = useCertifications();
-  
-  console.log('Experience component state:', { 
-    experiences, 
-    experiencesLoading, 
-    experiencesError,
-    education,
-    educationLoading,
-    educationError,
-    certifications,
-    certificationsLoading,
-    certificationsError
-  });
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+    // Small delay to ensure DOM is fully rendered
+    const timer = setTimeout(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: '50px' }
+      );
 
-    const elements = document.querySelectorAll('.reveal');
-    elements.forEach((el) => observer.observe(el));
+      const elements = document.querySelectorAll('.reveal');
+      elements.forEach((el) => observer.observe(el));
 
-    return () => observer.disconnect();
-  }, []);
+      return () => observer.disconnect();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [experiences, education, certifications]);
 
   const toggleExpanded = (index: number) => {
     const newExpanded = new Set(expandedItems);
@@ -317,8 +309,12 @@ const Experience = () => {
                                 <Calendar className="w-3 h-3 flex-shrink-0" />
                                 <span>{cert.date}</span>
                               </div>
-                              <span className="hidden sm:inline">•</span>
-                              <span>ID: {cert.id}</span>
+                              {cert.credential_id && (
+                                <>
+                                  <span className="hidden sm:inline">•</span>
+                                  <span>ID: {cert.credential_id}</span>
+                                </>
+                              )}
                             </div>
                           </div>
                           <Badge variant="secondary" className="glass w-fit">
