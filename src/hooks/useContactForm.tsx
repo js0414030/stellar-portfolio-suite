@@ -1,6 +1,26 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { z } from 'zod';
+
+const contactFormSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(2, 'Name must be at least 2 characters')
+    .max(100, 'Name must be less than 100 characters'),
+  email: z.string()
+    .trim()
+    .email('Please enter a valid email address')
+    .max(255, 'Email must be less than 255 characters'),
+  subject: z.string()
+    .trim()
+    .min(3, 'Subject must be at least 3 characters')
+    .max(200, 'Subject must be less than 200 characters'),
+  message: z.string()
+    .trim()
+    .min(10, 'Message must be at least 10 characters')
+    .max(2000, 'Message must be less than 2000 characters')
+});
 
 interface ContactFormData {
   name: string;
@@ -18,27 +38,17 @@ export const useContactForm = () => {
     try {
       setIsSubmitting(true);
 
-      // Basic validation
-      if (!formData.name.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
-        throw new Error('Please fill in all required fields');
-      }
-
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
-        throw new Error('Please enter a valid email address');
-      }
+      // Validate using zod schema
+      const validatedData = contactFormSchema.parse(formData);
 
       const { error } = await supabase
         .from('contact_messages')
-        .insert([
-          {
-            name: formData.name.trim(),
-            email: formData.email.trim(),
-            subject: formData.subject.trim(),
-            message: formData.message.trim()
-          }
-        ]);
+        .insert([{
+          name: validatedData.name,
+          email: validatedData.email,
+          subject: validatedData.subject,
+          message: validatedData.message
+        }]);
 
       if (error) throw error;
 
@@ -54,7 +64,13 @@ export const useContactForm = () => {
 
       return { success: true };
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
+      let errorMessage = 'Failed to send message';
+      
+      if (err instanceof z.ZodError) {
+        errorMessage = err.errors[0].message;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
       
       toast({
         title: "Error sending message",

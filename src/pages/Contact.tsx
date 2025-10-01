@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Mail, MapPin, Phone, Github, Linkedin, Twitter, Send, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,27 @@ const Contact = () => {
   });
   
   const { submitContactForm, isSubmitting, isSubmitted } = useContactForm();
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      },
+      { threshold: 0.01, rootMargin: '100px' }
+    );
+
+    // Wait for DOM to be ready
+    requestAnimationFrame(() => {
+      const elements = document.querySelectorAll('.reveal');
+      elements.forEach((el) => observer.observe(el));
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({

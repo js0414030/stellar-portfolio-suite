@@ -15,7 +15,7 @@ const Experience = () => {
 
   useEffect(() => {
     // Small delay to ensure DOM is fully rendered
-    const timer = setTimeout(() => {
+    requestAnimationFrame(() => {
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -24,16 +24,12 @@ const Experience = () => {
             }
           });
         },
-        { threshold: 0.1, rootMargin: '50px' }
+        { threshold: 0.01, rootMargin: '100px' }
       );
 
       const elements = document.querySelectorAll('.reveal');
       elements.forEach((el) => observer.observe(el));
-
-      return () => observer.disconnect();
-    }, 100);
-
-    return () => clearTimeout(timer);
+    });
   }, [experiences, education, certifications]);
 
   const toggleExpanded = (index: number) => {
