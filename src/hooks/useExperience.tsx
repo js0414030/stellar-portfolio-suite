@@ -47,11 +47,14 @@ export const useExperiences = () => {
   useEffect(() => {
     const fetchExperiences = async () => {
       try {
+        console.log('Fetching experiences from Supabase...');
         setLoading(true);
         const { data, error } = await supabase
           .from('experiences')
           .select('*')
           .order('order_index', { ascending: true });
+        
+        console.log('Experiences response:', { data, error });
 
         if (error) throw error;
         setExperiences(data || []);
@@ -76,11 +79,14 @@ export const useEducation = () => {
   useEffect(() => {
     const fetchEducation = async () => {
       try {
+        console.log('Fetching education from Supabase...');
         setLoading(true);
         const { data, error } = await supabase
           .from('education')
           .select('*')
           .order('period', { ascending: false });
+        
+        console.log('Education response:', { data, error });
 
         if (error) throw error;
         setEducation(data || []);
@@ -105,11 +111,14 @@ export const useCertifications = () => {
   useEffect(() => {
     const fetchCertifications = async () => {
       try {
+        console.log('Fetching certifications from Supabase...');
         setLoading(true);
         const { data, error } = await supabase
           .from('certifications')
           .select('*')
           .order('date', { ascending: false });
+        
+        console.log('Certifications response:', { data, error });
 
         if (error) throw error;
         setCertifications(data || []);

@@ -7,11 +7,24 @@ import SEOHead from '@/components/SEOHead';
 import { useExperiences, useEducation, useCertifications } from '@/hooks/useExperience';
 
 const Experience = () => {
+  console.log('Experience component rendering...');
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set([0]));
   
   const { experiences, loading: experiencesLoading, error: experiencesError } = useExperiences();
   const { education, loading: educationLoading, error: educationError } = useEducation();
   const { certifications, loading: certificationsLoading, error: certificationsError } = useCertifications();
+  
+  console.log('Experience component state:', { 
+    experiences, 
+    experiencesLoading, 
+    experiencesError,
+    education,
+    educationLoading,
+    educationError,
+    certifications,
+    certificationsLoading,
+    certificationsError
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
