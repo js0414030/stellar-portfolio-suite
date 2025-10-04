@@ -9,21 +9,21 @@ const About = () => {
   const skillsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('revealed');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+    requestAnimationFrame(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+            }
+          });
+        },
+        { threshold: 0.01, rootMargin: '100px' }
+      );
 
-    const elements = document.querySelectorAll('.reveal');
-    elements.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
+      const elements = document.querySelectorAll('.reveal');
+      elements.forEach((el) => observer.observe(el));
+    });
   }, []);
 
   const experiences = [

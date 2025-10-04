@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, Github, ExternalLink, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,6 +33,24 @@ const Projects = () => {
       project.tags.forEach(tag => tagSet.add(tag));
     });
     return ['all', ...Array.from(tagSet).sort()];
+  }, [projects]);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+            }
+          });
+        },
+        { threshold: 0.01, rootMargin: '100px' }
+      );
+
+      const elements = document.querySelectorAll('.reveal');
+      elements.forEach((el) => observer.observe(el));
+    });
   }, [projects]);
 
   if (loading) {
