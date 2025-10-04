@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Github, Linkedin, Mail, Download } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail, Download, Shield, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { useAuth } from '@/hooks/useAuth';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { user, isAdmin, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -89,17 +91,42 @@ const Navigation = () => {
             >
               <Linkedin className="w-5 h-5" />
             </a>
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10"
-              asChild
-            >
-              <a href="/resume.pdf" download>
-                <Download className="w-4 h-4 mr-2" />
-                Resume
-              </a>
-            </Button>
+            {isAdmin && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+                asChild
+              >
+                <Link to="/admin">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Admin
+                </Link>
+              </Button>
+            )}
+            {user ? (
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+                onClick={() => signOut()}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
+            ) : (
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+                asChild
+              >
+                <a href="/resume.pdf" download>
+                  <Download className="w-4 h-4 mr-2" />
+                  Resume
+                </a>
+              </Button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -129,37 +156,68 @@ const Navigation = () => {
                   {item.name}
                 </Link>
               ))}
-              <div className="flex items-center space-x-4 px-3 pt-4 border-t border-border/20">
-                <ThemeToggle />
-                <a
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
-                  aria-label="GitHub Profile"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
-                  aria-label="LinkedIn Profile"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10"
-                  asChild
-                >
-                  <a href="/resume.pdf" download>
-                    <Download className="w-4 h-4 mr-2" />
-                    Resume
+              <div className="flex flex-col space-y-4 px-3 pt-4 border-t border-border/20">
+                <div className="flex items-center space-x-4">
+                  <ThemeToggle />
+                  <a
+                    href="https://github.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
+                    aria-label="GitHub Profile"
+                  >
+                    <Github className="w-5 h-5" />
                   </a>
-                </Button>
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
+                    aria-label="LinkedIn Profile"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                </div>
+                {isAdmin && (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10 w-full"
+                    asChild
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Link to="/admin">
+                      <Shield className="w-4 h-4 mr-2" />
+                      Admin Dashboard
+                    </Link>
+                  </Button>
+                )}
+                {user ? (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10 w-full"
+                    onClick={() => {
+                      signOut();
+                      setIsOpen(false);
+                    }}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10 w-full"
+                    asChild
+                  >
+                    <a href="/resume.pdf" download>
+                      <Download className="w-4 h-4 mr-2" />
+                      Download Resume
+                    </a>
+                  </Button>
+                )}
               </div>
             </div>
           </div>

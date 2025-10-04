@@ -3,11 +3,13 @@ import { ArrowDown, Github, Linkedin, Mail, Download, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
+import { useSkills } from '@/hooks/useSkills';
 
 const Index = () => {
   const [typedText, setTypedText] = useState('');
   const roles = ['Full Stack Developer', 'UI/UX Designer', 'Tech Lead', 'Problem Solver'];
   const [currentRole, setCurrentRole] = useState(0);
+  const { skills: fetchedSkills } = useSkills();
 
   useEffect(() => {
     const role = roles[currentRole];
@@ -27,10 +29,10 @@ const Index = () => {
     return () => clearInterval(typingInterval);
   }, [currentRole]);
 
-  const skills = [
-    'React', 'TypeScript', 'Node.js', 'Python', 'AWS', 'GraphQL',
-    'Docker', 'PostgreSQL', 'MongoDB', 'Redis', 'Kubernetes', 'Figma'
-  ];
+  const displayedSkills = fetchedSkills.length > 0 
+    ? fetchedSkills.slice(0, 12).map(s => s.name)
+    : ['React', 'TypeScript', 'Node.js', 'Python', 'AWS', 'GraphQL',
+       'Docker', 'PostgreSQL', 'MongoDB', 'Redis', 'Kubernetes', 'Figma'];
 
   return (
     <>
@@ -85,7 +87,7 @@ const Index = () => {
 
             {/* Skills */}
             <div className="flex flex-wrap justify-center gap-2 max-w-4xl mx-auto">
-              {skills.map((skill, index) => (
+              {displayedSkills.map((skill, index) => (
                 <Badge 
                   key={skill} 
                   variant="secondary"

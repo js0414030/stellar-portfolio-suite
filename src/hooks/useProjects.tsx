@@ -85,7 +85,8 @@ export const useProjects = ({
     currentPage,
     totalPages,
     fetchProjects,
-    setCurrentPage: (page: number) => fetchProjects(page)
+    setCurrentPage: (page: number) => fetchProjects(page),
+    refetch: () => fetchProjects(currentPage)
   };
 };
 

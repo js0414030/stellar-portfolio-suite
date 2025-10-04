@@ -15,7 +15,9 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Experience from "./pages/Experience";
 import Contact from "./pages/Contact";
 import Admin from "./pages/Admin";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +39,15 @@ const App = () => (
                 <Route path="/projects/:id" element={<ProjectDetail />} />
                 <Route path="/experience" element={<Experience />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/admin" element={<Admin />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <Admin />
+                    </ProtectedRoute>
+                  } 
+                />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

@@ -44,28 +44,28 @@ export const useExperiences = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchExperiences = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('experiences')
+        .select('*')
+        .order('order_index', { ascending: true });
+
+      if (error) throw error;
+      setExperiences(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchExperiences = async () => {
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('experiences')
-          .select('*')
-          .order('order_index', { ascending: true });
-
-        if (error) throw error;
-        setExperiences(data || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchExperiences();
   }, []);
 
-  return { experiences, loading, error };
+  return { experiences, loading, error, refetch: fetchExperiences };
 };
 
 export const useEducation = () => {
@@ -73,28 +73,28 @@ export const useEducation = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchEducation = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('education')
+        .select('*')
+        .order('period', { ascending: false });
+
+      if (error) throw error;
+      setEducation(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchEducation = async () => {
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('education')
-          .select('*')
-          .order('period', { ascending: false });
-
-        if (error) throw error;
-        setEducation(data || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchEducation();
   }, []);
 
-  return { education, loading, error };
+  return { education, loading, error, refetch: fetchEducation };
 };
 
 export const useCertifications = () => {
@@ -102,26 +102,26 @@ export const useCertifications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchCertifications = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('certifications')
+        .select('*')
+        .order('date', { ascending: false });
+
+      if (error) throw error;
+      setCertifications(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchCertifications = async () => {
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('certifications')
-          .select('*')
-          .order('date', { ascending: false });
-
-        if (error) throw error;
-        setCertifications(data || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCertifications();
   }, []);
 
-  return { certifications, loading, error };
+  return { certifications, loading, error, refetch: fetchCertifications };
 };

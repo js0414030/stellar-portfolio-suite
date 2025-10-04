@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
+import { useSkills } from '@/hooks/useSkills';
 
 const About = () => {
   const skillsRef = useRef<HTMLDivElement>(null);
+  const { skills: fetchedSkills } = useSkills();
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -57,38 +59,60 @@ const About = () => {
     }
   ];
 
-  const skills = [
-    {
-      category: 'Frontend',
-      icon: <Code className="w-5 h-5" />,
-      items: [
-        { name: 'React/Next.js', level: 95 },
-        { name: 'TypeScript', level: 90 },
-        { name: 'Tailwind CSS', level: 95 },
-        { name: 'Vue.js', level: 80 }
-      ]
-    },
-    {
-      category: 'Backend',
-      icon: <Code className="w-5 h-5" />,
-      items: [
-        { name: 'Node.js', level: 90 },
-        { name: 'Python', level: 85 },
-        { name: 'PostgreSQL', level: 88 },
-        { name: 'GraphQL', level: 82 }
-      ]
-    },
-    {
-      category: 'Design',
-      icon: <Palette className="w-5 h-5" />,
-      items: [
-        { name: 'Figma', level: 90 },
-        { name: 'UI/UX Design', level: 85 },
-        { name: 'Prototyping', level: 88 },
-        { name: 'Design Systems', level: 92 }
-      ]
-    }
-  ];
+  // Group skills by category from database or use defaults
+  const skillsByCategory = fetchedSkills.length > 0 
+    ? fetchedSkills.reduce((acc, skill) => {
+        if (!acc[skill.category]) {
+          acc[skill.category] = [];
+        }
+        acc[skill.category].push({ 
+          name: skill.name, 
+          level: skill.level ? parseInt(skill.level) : 80 
+        });
+        return acc;
+      }, {} as Record<string, { name: string; level: number }[]>)
+    : {};
+
+  const skills = Object.keys(skillsByCategory).length > 0
+    ? Object.entries(skillsByCategory).map(([category, items]) => ({
+        category,
+        icon: category.toLowerCase().includes('design') 
+          ? <Palette className="w-5 h-5" />
+          : <Code className="w-5 h-5" />,
+        items
+      }))
+    : [
+        {
+          category: 'Frontend',
+          icon: <Code className="w-5 h-5" />,
+          items: [
+            { name: 'React/Next.js', level: 95 },
+            { name: 'TypeScript', level: 90 },
+            { name: 'Tailwind CSS', level: 95 },
+            { name: 'Vue.js', level: 80 }
+          ]
+        },
+        {
+          category: 'Backend',
+          icon: <Code className="w-5 h-5" />,
+          items: [
+            { name: 'Node.js', level: 90 },
+            { name: 'Python', level: 85 },
+            { name: 'PostgreSQL', level: 88 },
+            { name: 'GraphQL', level: 82 }
+          ]
+        },
+        {
+          category: 'Design',
+          icon: <Palette className="w-5 h-5" />,
+          items: [
+            { name: 'Figma', level: 90 },
+            { name: 'UI/UX Design', level: 85 },
+            { name: 'Prototyping', level: 88 },
+            { name: 'Design Systems', level: 92 }
+          ]
+        }
+      ];
 
   return (
     <>
