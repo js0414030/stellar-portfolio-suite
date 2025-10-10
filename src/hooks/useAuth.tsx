@@ -7,6 +7,7 @@ export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -27,12 +28,12 @@ export const useAuth = () => {
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        checkAdminRole(session.user.id);
+        await checkAdminRole(session.user.id);
       }
       setLoading(false);
     });
@@ -41,6 +42,7 @@ export const useAuth = () => {
   }, []);
 
   const checkAdminRole = async (userId: string) => {
+    setCheckingAdmin(true);
     try {
       const { data, error } = await supabase
         .from('user_roles')
@@ -56,6 +58,8 @@ export const useAuth = () => {
       }
     } catch (err) {
       setIsAdmin(false);
+    } finally {
+      setCheckingAdmin(false);
     }
   };
 
@@ -91,7 +95,7 @@ export const useAuth = () => {
   return {
     user,
     session,
-    loading,
+    loading: loading || checkingAdmin,
     isAdmin,
     signIn,
     signUp,
