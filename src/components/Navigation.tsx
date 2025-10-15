@@ -4,12 +4,14 @@ import { Menu, X, Github, Linkedin, Mail, Download, Shield, LogOut } from 'lucid
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuth } from '@/hooks/useAuth';
+import { usePersonalInfo } from '@/hooks/usePersonalInfo';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const { user, isAdmin, signOut } = useAuth();
+  const { personalInfo } = usePersonalInfo();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +49,7 @@ const Navigation = () => {
             to="/" 
             className="font-bold text-xl gradient-text hover:scale-105 transition-transform duration-300"
           >
-            Alex Chen
+            {personalInfo?.full_name || 'Portfolio'}
           </Link>
 
           {/* Desktop Navigation */}

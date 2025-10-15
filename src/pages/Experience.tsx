@@ -70,9 +70,9 @@ const Experience = () => {
   return (
     <>
       <SEOHead 
-        title="Experience - Alex Chen"
+        title="Experience - Jatin Sharma"
         description="Explore my professional journey spanning 5+ years in full stack development, from junior developer to senior engineer, with experience at innovative companies."
-        keywords="experience, career, full stack developer, professional journey, work history, alex chen"
+        keywords="experience, career, full stack developer, professional journey, work history, Jatin Sharma"
         url="https://alexchen.dev/experience"
       />
       <div className="min-h-screen">

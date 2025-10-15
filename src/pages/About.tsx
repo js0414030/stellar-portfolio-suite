@@ -117,9 +117,9 @@ const About = () => {
   return (
     <>
       <SEOHead 
-        title="About - Alex Chen"
-        description="Learn about Alex Chen, a passionate full stack developer with 5+ years of experience building scalable web applications and digital solutions."
-        keywords="about, full stack developer, experience, skills, background, alex chen"
+        title="About - Jatin Sharma"
+        description="Learn about Jatin Sharma, a passionate full stack developer with 5+ years of experience building scalable web applications and digital solutions."
+        keywords="about, full stack developer, experience, skills, background, Jatin Sharma"
         url="https://alexchen.dev/about"
       />
       <div className="min-h-screen">

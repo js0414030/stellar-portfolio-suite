@@ -13,7 +13,7 @@ const Index = () => {
   const { personalInfo } = usePersonalInfo();
 
   const roles = personalInfo?.roles || ['Full Stack Developer', 'UI/UX Designer', 'Tech Lead', 'Problem Solver'];
-  const fullName = personalInfo?.full_name || 'Alex Chen';
+  const fullName = personalInfo?.full_name || 'Jatin Sharma';
   const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
   const description = personalInfo?.description || 'I craft digital experiences that blend beautiful design with robust functionality. Specializing in modern web technologies and passionate about creating solutions that make a difference.';
   const stats = personalInfo?.stats || [

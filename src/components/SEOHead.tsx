@@ -10,14 +10,14 @@ interface SEOHeadProps {
 }
 
 const SEOHead = ({ 
-  title = "Alex Chen - Full Stack Developer & Designer",
+  title = "Jatin Sharma - Full Stack Developer & Designer",
   description = "Passionate full stack developer with 5+ years of experience building scalable web applications. Specializing in React, Node.js, and modern web technologies.",
   keywords = "full stack developer, web developer, react developer, node.js, typescript, ui/ux designer",
   image = "/og-image.jpg",
   url = "https://alexchen.dev",
   type = "website"
 }: SEOHeadProps) => {
-  const fullTitle = title.includes("Alex Chen") ? title : `${title} | Alex Chen`;
+  const fullTitle = title.includes("Jatin Sharma") ? title : `${title} | Jatin Sharma`;
 
   return (
     <Helmet>
@@ -25,7 +25,7 @@ const SEOHead = ({
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <meta name="author" content="Alex Chen" />
+      <meta name="author" content="Jatin Sharma" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="robots" content="index, follow" />
       <link rel="canonical" href={url} />
@@ -36,7 +36,7 @@ const SEOHead = ({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
-      <meta property="og:site_name" content="Alex Chen Portfolio" />
+      <meta property="og:site_name" content="Jatin Sharma Portfolio" />
 
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />

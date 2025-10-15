@@ -1,7 +1,7 @@
 -- Create personal_info table for managing homepage content
 CREATE TABLE public.personal_info (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
-  full_name text NOT NULL DEFAULT 'Alex Chen',
+  full_name text NOT NULL DEFAULT 'Jatin Sharma',
   tagline text NOT NULL DEFAULT 'Full Stack Developer & Designer',
   description text NOT NULL DEFAULT 'I craft digital experiences that blend beautiful design with robust functionality.',
   profile_image_url text,
@@ -58,7 +58,7 @@ INSERT INTO public.personal_info (
   roles,
   stats
 ) VALUES (
-  'Alex Chen',
+  'Jatin Sharma',
   'Full Stack Developer & Designer',
   'I craft digital experiences that blend beautiful design with robust functionality. Specializing in modern web technologies and passionate about creating solutions that make a difference.',
   'https://github.com',

@@ -124,9 +124,9 @@ const Contact = () => {
   return (
     <>
       <SEOHead 
-        title="Contact - Alex Chen"
-        description="Get in touch with Alex Chen for freelance projects, collaborations, or consulting opportunities. Available for full stack development work."
-        keywords="contact, hire, freelance, full stack developer, collaboration, alex chen"
+        title="Contact - Jatin Sharma"
+        description="Get in touch with Jatin Sharma for freelance projects, collaborations, or consulting opportunities. Available for full stack development work."
+        keywords="contact, hire, freelance, full stack developer, collaboration, Jatin Sharma"
         url="https://alexchen.dev/contact"
       />
       <div className="min-h-screen">

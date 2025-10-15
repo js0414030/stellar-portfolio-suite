@@ -78,9 +78,9 @@ const Projects = () => {
   return (
     <>
       <SEOHead 
-        title="Projects - Alex Chen"
+        title="Projects - Jatin Sharma"
         description="Explore my portfolio of full stack development projects, including e-commerce platforms, web applications, and innovative digital solutions built with modern technologies."
-        keywords="projects, portfolio, full stack development, react projects, web applications, alex chen"
+        keywords="projects, portfolio, full stack development, react projects, web applications, Jatin Sharma"
         url="https://alexchen.dev/projects"
       />
       <div className="min-h-screen">
