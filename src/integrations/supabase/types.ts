@@ -155,6 +155,54 @@ export type Database = {
         }
         Relationships: []
       }
+      personal_info: {
+        Row: {
+          created_at: string
+          description: string
+          email: string | null
+          full_name: string
+          github_url: string | null
+          id: string
+          linkedin_url: string | null
+          profile_image_url: string | null
+          resume_url: string | null
+          roles: string[]
+          stats: Json
+          tagline: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          email?: string | null
+          full_name?: string
+          github_url?: string | null
+          id?: string
+          linkedin_url?: string | null
+          profile_image_url?: string | null
+          resume_url?: string | null
+          roles?: string[]
+          stats?: Json
+          tagline?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          email?: string | null
+          full_name?: string
+          github_url?: string | null
+          id?: string
+          linkedin_url?: string | null
+          profile_image_url?: string | null
+          resume_url?: string | null
+          roles?: string[]
+          stats?: Json
+          tagline?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

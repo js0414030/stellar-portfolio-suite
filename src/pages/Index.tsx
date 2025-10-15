@@ -4,12 +4,24 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
 import { useSkills } from '@/hooks/useSkills';
+import { usePersonalInfo } from '@/hooks/usePersonalInfo';
 
 const Index = () => {
   const [typedText, setTypedText] = useState('');
-  const roles = ['Full Stack Developer', 'UI/UX Designer', 'Tech Lead', 'Problem Solver'];
   const [currentRole, setCurrentRole] = useState(0);
   const { skills: fetchedSkills } = useSkills();
+  const { personalInfo } = usePersonalInfo();
+
+  const roles = personalInfo?.roles || ['Full Stack Developer', 'UI/UX Designer', 'Tech Lead', 'Problem Solver'];
+  const fullName = personalInfo?.full_name || 'Alex Chen';
+  const initials = fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+  const description = personalInfo?.description || 'I craft digital experiences that blend beautiful design with robust functionality. Specializing in modern web technologies and passionate about creating solutions that make a difference.';
+  const stats = personalInfo?.stats || [
+    { label: 'Projects Completed', value: '50+' },
+    { label: 'Years Experience', value: '5+' },
+    { label: 'Technologies Mastered', value: '20+' },
+    { label: 'Happy Clients', value: '30+' },
+  ];
 
   useEffect(() => {
     const role = roles[currentRole];
@@ -37,8 +49,8 @@ const Index = () => {
   return (
     <>
       <SEOHead 
-        title="Alex Chen - Full Stack Developer & Designer"
-        description="Passionate full stack developer with 5+ years of experience building scalable web applications. Specializing in React, Node.js, TypeScript, and modern web technologies."
+        title={`${fullName} - ${personalInfo?.tagline || 'Full Stack Developer & Designer'}`}
+        description={description}
         keywords="full stack developer, react developer, typescript, node.js, web developer, ui/ux designer, portfolio"
         url="https://alexchen.dev"
       />
@@ -59,16 +71,24 @@ const Index = () => {
             {/* Profile Image */}
             <div className="relative mx-auto w-32 h-32 mb-8">
               <div className="w-full h-full rounded-full bg-gradient-primary p-1 pulse-glow">
-                <div className="w-full h-full rounded-full bg-muted flex items-center justify-center text-4xl font-bold text-primary">
-                  AC
-                </div>
+                {personalInfo?.profile_image_url ? (
+                  <img 
+                    src={personalInfo.profile_image_url} 
+                    alt={fullName}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-full bg-muted flex items-center justify-center text-4xl font-bold text-primary">
+                    {initials}
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Main Heading */}
             <div className="space-y-4">
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight">
-                Hi, I'm <span className="gradient-text">Alex Chen</span>
+                Hi, I'm <span className="gradient-text">{fullName}</span>
               </h1>
               <div className="text-xl sm:text-2xl md:text-3xl text-muted-foreground min-h-[3rem] flex flex-col sm:flex-row items-center justify-center gap-2">
                 <span>I'm a</span>
@@ -81,8 +101,7 @@ const Index = () => {
 
             {/* Description */}
             <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
-              I craft digital experiences that blend beautiful design with robust functionality. 
-              Specializing in modern web technologies and passionate about creating solutions that make a difference.
+              {description}
             </p>
 
             {/* Skills */}
@@ -111,43 +130,51 @@ const Index = () => {
                   View My Work
                 </a>
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10"
-                asChild
-              >
-                <a href="/resume.pdf" download>
-                  <Download className="w-5 h-5 mr-2" />
-                  Download Resume
-                </a>
-              </Button>
+              {(personalInfo?.resume_url || true) && (
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  className="glass border-primary/20 hover:border-primary/40 hover:bg-primary/10"
+                  asChild
+                >
+                  <a href={personalInfo?.resume_url || '/resume.pdf'} download>
+                    <Download className="w-5 h-5 mr-2" />
+                    Download Resume
+                  </a>
+                </Button>
+              )}
             </div>
 
             {/* Social Links */}
             <div className="flex justify-center space-x-6 pt-6">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full glass hover:bg-primary/20 transition-all duration-300 hover:scale-110"
-              >
-                <Github className="w-6 h-6" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-full glass hover:bg-primary/20 transition-all duration-300 hover:scale-110"
-              >
-                <Linkedin className="w-6 h-6" />
-              </a>
-              <a
-                href="mailto:alex@example.com"
-                className="p-3 rounded-full glass hover:bg-primary/20 transition-all duration-300 hover:scale-110"
-              >
-                <Mail className="w-6 h-6" />
-              </a>
+              {personalInfo?.github_url && (
+                <a
+                  href={personalInfo.github_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full glass hover:bg-primary/20 transition-all duration-300 hover:scale-110"
+                >
+                  <Github className="w-6 h-6" />
+                </a>
+              )}
+              {personalInfo?.linkedin_url && (
+                <a
+                  href={personalInfo.linkedin_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full glass hover:bg-primary/20 transition-all duration-300 hover:scale-110"
+                >
+                  <Linkedin className="w-6 h-6" />
+                </a>
+              )}
+              {personalInfo?.email && (
+                <a
+                  href={`mailto:${personalInfo.email}`}
+                  className="p-3 rounded-full glass hover:bg-primary/20 transition-all duration-300 hover:scale-110"
+                >
+                  <Mail className="w-6 h-6" />
+                </a>
+              )}
             </div>
           </div>
 
@@ -162,12 +189,7 @@ const Index = () => {
         <section className="py-20 bg-surface/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { label: 'Projects Completed', value: '50+' },
-              { label: 'Years Experience', value: '5+' },
-              { label: 'Technologies Mastered', value: '20+' },
-              { label: 'Happy Clients', value: '30+' },
-            ].map((stat, index) => (
+            {stats.map((stat, index) => (
               <div 
                 key={stat.label}
                 className="text-center space-y-2 glass p-6 rounded-2xl hover:shadow-card transition-all duration-300"

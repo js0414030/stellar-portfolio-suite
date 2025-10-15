@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Layout, FileText, Code, GraduationCap, Award, Plus, Edit, Trash2, MessageSquare, Save, X } from 'lucide-react';
+import { Layout, FileText, Code, GraduationCap, Award, Plus, Edit, Trash2, MessageSquare, Save, X, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,6 +13,7 @@ import { toast } from '@/hooks/use-toast';
 import { useProjects } from '@/hooks/useProjects';
 import { useExperiences, useEducation, useCertifications } from '@/hooks/useExperience';
 import { useSkills } from '@/hooks/useSkills';
+import { usePersonalInfo } from '@/hooks/usePersonalInfo';
 
 interface ContactMessage {
   id: string;
@@ -24,17 +25,18 @@ interface ContactMessage {
 }
 
 const Admin = () => {
-  const [activeTab, setActiveTab] = useState('projects');
+  const [activeTab, setActiveTab] = useState('personal');
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
-  const [dialogType, setDialogType] = useState<'project' | 'experience' | 'skill' | 'education' | 'certification'>('project');
+  const [dialogType, setDialogType] = useState<'project' | 'experience' | 'skill' | 'education' | 'certification' | 'personal'>('personal');
 
   const { projects, refetch: refetchProjects } = useProjects();
   const { experiences, refetch: refetchExperiences } = useExperiences();
   const { education, refetch: refetchEducation } = useEducation();
   const { certifications, refetch: refetchCertifications } = useCertifications();
   const { skills, refetch: refetchSkills } = useSkills();
+  const { personalInfo, refetch: refetchPersonalInfo } = usePersonalInfo();
 
   useEffect(() => {
     fetchMessages();
@@ -89,8 +91,14 @@ const Admin = () => {
     const data: any = {};
     
     formData.forEach((value, key) => {
-      if (key === 'tags' || key === 'technologies' || key === 'responsibilities' || key === 'achievements') {
+      if (key === 'tags' || key === 'technologies' || key === 'responsibilities' || key === 'achievements' || key === 'roles') {
         data[key] = value.toString().split(',').map(t => t.trim()).filter(Boolean);
+      } else if (key === 'stats') {
+        try {
+          data[key] = JSON.parse(value.toString());
+        } catch {
+          data[key] = [];
+        }
       } else {
         data[key] = value;
       }
@@ -99,10 +107,18 @@ const Admin = () => {
     const table = dialogType === 'experience' ? 'experiences' : 
                   dialogType === 'skill' ? 'skills' :
                   dialogType === 'education' ? 'education' :
-                  dialogType === 'certification' ? 'certifications' : 'projects';
+                  dialogType === 'certification' ? 'certifications' :
+                  dialogType === 'personal' ? 'personal_info' : 'projects';
 
     let error;
-    if (editingItem) {
+    if (dialogType === 'personal' && personalInfo) {
+      // Personal info always updates
+      const { error: updateError } = await supabase
+        .from(table)
+        .update(data)
+        .eq('id', personalInfo.id);
+      error = updateError;
+    } else if (editingItem) {
       const { error: updateError } = await supabase
         .from(table)
         .update(data)
@@ -126,6 +142,7 @@ const Admin = () => {
       else if (table === 'experiences') refetchExperiences();
       else if (table === 'skills') refetchSkills();
       else if (table === 'education') refetchEducation();
+      else if (table === 'personal_info') refetchPersonalInfo();
       else if (table === 'certifications') refetchCertifications();
     }
   };
@@ -145,7 +162,8 @@ const Admin = () => {
             </div>
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-6 glass">
+              <TabsList className="grid w-full grid-cols-7 glass">
+                <TabsTrigger value="personal"><User className="w-4 h-4 mr-2" />Personal</TabsTrigger>
                 <TabsTrigger value="projects"><Layout className="w-4 h-4 mr-2" />Projects</TabsTrigger>
                 <TabsTrigger value="experience"><FileText className="w-4 h-4 mr-2" />Experience</TabsTrigger>
                 <TabsTrigger value="skills"><Code className="w-4 h-4 mr-2" />Skills</TabsTrigger>
@@ -153,6 +171,71 @@ const Admin = () => {
                 <TabsTrigger value="certifications"><Award className="w-4 h-4 mr-2" />Certs</TabsTrigger>
                 <TabsTrigger value="messages"><MessageSquare className="w-4 h-4 mr-2" />Messages</TabsTrigger>
               </TabsList>
+
+              {/* Personal Info Tab */}
+              <TabsContent value="personal">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Personal Information</CardTitle>
+                    <Button onClick={() => openDialog('personal', personalInfo)}><Edit className="w-4 h-4 mr-2" />Edit Info</Button>
+                  </CardHeader>
+                  <CardContent>
+                    {personalInfo && (
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-muted-foreground">Full Name</p>
+                            <p className="font-semibold">{personalInfo.full_name}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Tagline</p>
+                            <p className="font-semibold">{personalInfo.tagline}</p>
+                          </div>
+                          <div className="col-span-2">
+                            <p className="text-sm text-muted-foreground">Description</p>
+                            <p className="font-semibold">{personalInfo.description}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Email</p>
+                            <p className="font-semibold">{personalInfo.email || 'Not set'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">GitHub</p>
+                            <p className="font-semibold">{personalInfo.github_url || 'Not set'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">LinkedIn</p>
+                            <p className="font-semibold">{personalInfo.linkedin_url || 'Not set'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Resume URL</p>
+                            <p className="font-semibold">{personalInfo.resume_url || 'Not set'}</p>
+                          </div>
+                          <div className="col-span-2">
+                            <p className="text-sm text-muted-foreground">Roles</p>
+                            <div className="flex gap-2 flex-wrap mt-1">
+                              {personalInfo.roles.map((role, index) => (
+                                <span key={index} className="text-xs px-2 py-1 bg-primary/10 rounded">{role}</span>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="col-span-2">
+                            <p className="text-sm text-muted-foreground">Stats</p>
+                            <div className="grid grid-cols-4 gap-2 mt-1">
+                              {personalInfo.stats.map((stat, index) => (
+                                <div key={index} className="text-xs p-2 bg-primary/5 rounded">
+                                  <p className="font-bold">{stat.value}</p>
+                                  <p className="text-muted-foreground">{stat.label}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
               {/* Projects Tab */}
               <TabsContent value="projects">
@@ -493,6 +576,61 @@ const Admin = () => {
                 <div>
                   <Label htmlFor="credential_id">Credential ID (optional)</Label>
                   <Input id="credential_id" name="credential_id" defaultValue={editingItem?.credential_id} />
+                </div>
+              </>
+            )}
+
+            {dialogType === 'personal' && (
+              <>
+                <div>
+                  <Label htmlFor="full_name">Full Name</Label>
+                  <Input id="full_name" name="full_name" defaultValue={editingItem?.full_name} required />
+                </div>
+                <div>
+                  <Label htmlFor="tagline">Tagline</Label>
+                  <Input id="tagline" name="tagline" defaultValue={editingItem?.tagline} required />
+                </div>
+                <div>
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea id="description" name="description" defaultValue={editingItem?.description} required />
+                </div>
+                <div>
+                  <Label htmlFor="profile_image_url">Profile Image URL (optional)</Label>
+                  <Input id="profile_image_url" name="profile_image_url" defaultValue={editingItem?.profile_image_url} />
+                </div>
+                <div>
+                  <Label htmlFor="resume_url">Resume URL (optional)</Label>
+                  <Input id="resume_url" name="resume_url" defaultValue={editingItem?.resume_url} />
+                </div>
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input id="email" name="email" type="email" defaultValue={editingItem?.email} />
+                </div>
+                <div>
+                  <Label htmlFor="github_url">GitHub URL</Label>
+                  <Input id="github_url" name="github_url" defaultValue={editingItem?.github_url} />
+                </div>
+                <div>
+                  <Label htmlFor="linkedin_url">LinkedIn URL</Label>
+                  <Input id="linkedin_url" name="linkedin_url" defaultValue={editingItem?.linkedin_url} />
+                </div>
+                <div>
+                  <Label htmlFor="roles">Roles (comma separated)</Label>
+                  <Textarea id="roles" name="roles" defaultValue={editingItem?.roles?.join(', ')} required />
+                </div>
+                <div>
+                  <Label htmlFor="stats">Stats (JSON format)</Label>
+                  <Textarea 
+                    id="stats" 
+                    name="stats" 
+                    defaultValue={JSON.stringify(editingItem?.stats, null, 2)} 
+                    placeholder='[{"label": "Projects", "value": "50+"}]'
+                    rows={6}
+                    required 
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Format: Array of objects with "label" and "value" properties
+                  </p>
                 </div>
               </>
             )}
