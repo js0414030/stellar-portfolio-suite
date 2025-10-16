@@ -164,11 +164,15 @@ export type Database = {
           github_url: string | null
           id: string
           linkedin_url: string | null
+          location: string | null
+          phone: string | null
           profile_image_url: string | null
           resume_url: string | null
           roles: string[]
+          services: Json | null
           stats: Json
           tagline: string
+          twitter_url: string | null
           updated_at: string
         }
         Insert: {
@@ -179,11 +183,15 @@ export type Database = {
           github_url?: string | null
           id?: string
           linkedin_url?: string | null
+          location?: string | null
+          phone?: string | null
           profile_image_url?: string | null
           resume_url?: string | null
           roles?: string[]
+          services?: Json | null
           stats?: Json
           tagline?: string
+          twitter_url?: string | null
           updated_at?: string
         }
         Update: {
@@ -194,11 +202,15 @@ export type Database = {
           github_url?: string | null
           id?: string
           linkedin_url?: string | null
+          location?: string | null
+          phone?: string | null
           profile_image_url?: string | null
           resume_url?: string | null
           roles?: string[]
+          services?: Json | null
           stats?: Json
           tagline?: string
+          twitter_url?: string | null
           updated_at?: string
         }
         Relationships: []

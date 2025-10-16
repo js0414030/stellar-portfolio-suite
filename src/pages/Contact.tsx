@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
 import { useContactForm } from '@/hooks/useContactForm';
+import { usePersonalInfo } from '@/hooks/usePersonalInfo';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +18,7 @@ const Contact = () => {
   });
   
   const { submitContactForm, isSubmitting, isSubmitted } = useContactForm();
+  const { personalInfo, loading } = usePersonalInfo();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -57,79 +59,63 @@ const Contact = () => {
   };
 
   const contactInfo = [
-    {
+    ...(personalInfo?.email ? [{
       icon: <Mail className="w-5 h-5" />,
       label: 'Email',
-      value: 'alex@example.com',
-      href: 'mailto:alex@example.com'
-    },
-    {
+      value: personalInfo.email,
+      href: `mailto:${personalInfo.email}`
+    }] : []),
+    ...(personalInfo?.phone ? [{
       icon: <Phone className="w-5 h-5" />,
       label: 'Phone',
-      value: '+1 (555) 123-4567',
-      href: 'tel:+15551234567'
-    },
-    {
+      value: personalInfo.phone,
+      href: `tel:${personalInfo.phone.replace(/\D/g, '')}`
+    }] : []),
+    ...(personalInfo?.location ? [{
       icon: <MapPin className="w-5 h-5" />,
       label: 'Location',
-      value: 'San Francisco, CA',
+      value: personalInfo.location,
       href: 'https://maps.google.com'
-    }
+    }] : [])
   ];
 
   const socialLinks = [
-    {
+    ...(personalInfo?.github_url ? [{
       name: 'GitHub',
       icon: <Github className="w-5 h-5" />,
-      url: 'https://github.com',
+      url: personalInfo.github_url,
       color: 'hover:text-gray-900'
-    },
-    {
+    }] : []),
+    ...(personalInfo?.linkedin_url ? [{
       name: 'LinkedIn',
       icon: <Linkedin className="w-5 h-5" />,
-      url: 'https://linkedin.com',
+      url: personalInfo.linkedin_url,
       color: 'hover:text-blue-600'
-    },
-    {
+    }] : []),
+    ...(personalInfo?.twitter_url ? [{
       name: 'Twitter',
       icon: <Twitter className="w-5 h-5" />,
-      url: 'https://twitter.com',
+      url: personalInfo.twitter_url,
       color: 'hover:text-blue-400'
-    }
+    }] : [])
   ];
 
-  const services = [
-    {
-      title: 'Full Stack Development',
-      description: 'End-to-end web application development using modern technologies',
-      technologies: ['React', 'Node.js', 'TypeScript', 'PostgreSQL']
-    },
-    {
-      title: 'UI/UX Design',
-      description: 'User-centered design and interface development',
-      technologies: ['Figma', 'Design Systems', 'Prototyping']
-    },
-    {
-      title: 'Technical Consulting',
-      description: 'Architecture planning and technology strategy',
-      technologies: ['Architecture', 'Performance', 'Scalability']
-    },
-    {
-      title: 'Mentoring & Training',
-      description: 'Knowledge sharing and team development',
-      technologies: ['Code Review', 'Best Practices', 'Team Training']
-    }
-  ];
+  const services = personalInfo?.services || [];
 
   return (
     <>
       <SEOHead 
-        title="Contact - Jatin Sharma"
-        description="Get in touch with Jatin Sharma for freelance projects, collaborations, or consulting opportunities. Available for full stack development work."
-        keywords="contact, hire, freelance, full stack developer, collaboration, Jatin Sharma"
-        url="https://alexchen.dev/contact"
+        title={`Contact - ${personalInfo?.full_name || 'Portfolio'}`}
+        description={`Get in touch with ${personalInfo?.full_name || 'me'} for freelance projects, collaborations, or consulting opportunities.`}
+        keywords="contact, hire, freelance, full stack developer, collaboration"
+        url={`${window.location.origin}/contact`}
       />
       <div className="min-h-screen">
+        {loading ? (
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-pulse text-lg">Loading...</div>
+          </div>
+        ) : (
         <div className="pt-16">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-hero/10">
@@ -360,6 +346,7 @@ const Contact = () => {
           </div>
         </section>
         </div>
+        )}
       </div>
     </>
   );
