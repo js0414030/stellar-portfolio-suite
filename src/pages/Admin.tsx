@@ -93,11 +93,11 @@ const Admin = () => {
     formData.forEach((value, key) => {
       if (key === 'tags' || key === 'technologies' || key === 'responsibilities' || key === 'achievements' || key === 'roles') {
         data[key] = value.toString().split(',').map(t => t.trim()).filter(Boolean);
-      } else if (key === 'stats') {
+      } else if (key === 'stats' || key === 'services') {
         try {
           data[key] = JSON.parse(value.toString());
         } catch {
-          data[key] = [];
+          data[key] = key === 'services' ? [] : [];
         }
       } else {
         data[key] = value;
@@ -211,12 +211,40 @@ const Admin = () => {
                             <p className="text-sm text-muted-foreground">Resume URL</p>
                             <p className="font-semibold">{personalInfo.resume_url || 'Not set'}</p>
                           </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Phone</p>
+                            <p className="font-semibold">{personalInfo.phone || 'Not set'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Location</p>
+                            <p className="font-semibold">{personalInfo.location || 'Not set'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Twitter URL</p>
+                            <p className="font-semibold">{personalInfo.twitter_url || 'Not set'}</p>
+                          </div>
                           <div className="col-span-2">
                             <p className="text-sm text-muted-foreground">Roles</p>
                             <div className="flex gap-2 flex-wrap mt-1">
                               {personalInfo.roles.map((role, index) => (
                                 <span key={index} className="text-xs px-2 py-1 bg-primary/10 rounded">{role}</span>
                               ))}
+                            </div>
+                          </div>
+                          <div className="col-span-2">
+                            <p className="text-sm text-muted-foreground">Services</p>
+                            <div className="space-y-2 mt-1">
+                              {personalInfo.services && personalInfo.services.length > 0 ? (
+                                personalInfo.services.map((service, index) => (
+                                  <div key={index} className="text-xs p-2 bg-primary/5 rounded">
+                                    <p className="font-bold">{service.title}</p>
+                                    <p className="text-muted-foreground">{service.description}</p>
+                                    <p className="text-muted-foreground">Tech: {service.technologies?.join(', ')}</p>
+                                  </div>
+                                ))
+                              ) : (
+                                <p className="text-xs text-muted-foreground">No services added</p>
+                              )}
                             </div>
                           </div>
                           <div className="col-span-2">
@@ -615,6 +643,18 @@ const Admin = () => {
                   <Input id="linkedin_url" name="linkedin_url" defaultValue={editingItem?.linkedin_url} />
                 </div>
                 <div>
+                  <Label htmlFor="twitter_url">Twitter URL</Label>
+                  <Input id="twitter_url" name="twitter_url" defaultValue={editingItem?.twitter_url} />
+                </div>
+                <div>
+                  <Label htmlFor="phone">Phone</Label>
+                  <Input id="phone" name="phone" defaultValue={editingItem?.phone} />
+                </div>
+                <div>
+                  <Label htmlFor="location">Location</Label>
+                  <Input id="location" name="location" defaultValue={editingItem?.location} />
+                </div>
+                <div>
                   <Label htmlFor="roles">Roles (comma separated)</Label>
                   <Textarea id="roles" name="roles" defaultValue={editingItem?.roles?.join(', ')} required />
                 </div>
@@ -630,6 +670,19 @@ const Admin = () => {
                   />
                   <p className="text-xs text-muted-foreground mt-1">
                     Format: Array of objects with "label" and "value" properties
+                  </p>
+                </div>
+                <div>
+                  <Label htmlFor="services">Services (JSON format)</Label>
+                  <Textarea 
+                    id="services" 
+                    name="services" 
+                    defaultValue={JSON.stringify(editingItem?.services || [], null, 2)} 
+                    placeholder='[{"title": "Web Development", "description": "...", "technologies": ["React", "Node.js"]}]'
+                    rows={8}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Format: Array of objects with "title", "description", and "technologies" (array) properties
                   </p>
                 </div>
               </>
