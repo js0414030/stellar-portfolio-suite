@@ -93,11 +93,20 @@ const Admin = () => {
     formData.forEach((value, key) => {
       if (key === 'tags' || key === 'technologies' || key === 'responsibilities' || key === 'achievements' || key === 'roles') {
         data[key] = value.toString().split(',').map(t => t.trim()).filter(Boolean);
-      } else if (key === 'stats' || key === 'services') {
+      } else if (key === 'stats') {
         try {
           data[key] = JSON.parse(value.toString());
-        } catch {
-          data[key] = key === 'services' ? [] : [];
+        } catch (e) {
+          console.error('Error parsing stats:', e);
+          data[key] = [];
+        }
+      } else if (key === 'services') {
+        try {
+          const parsed = JSON.parse(value.toString());
+          data[key] = parsed;
+        } catch (e) {
+          console.error('Error parsing services:', e);
+          data[key] = [];
         }
       } else {
         data[key] = value;

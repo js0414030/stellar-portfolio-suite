@@ -5,10 +5,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
 import { useSkills } from '@/hooks/useSkills';
+import { usePersonalInfo } from '@/hooks/usePersonalInfo';
+import { useExperiences, useEducation } from '@/hooks/useExperience';
 
 const About = () => {
   const skillsRef = useRef<HTMLDivElement>(null);
   const { skills: fetchedSkills } = useSkills();
+  const { personalInfo, loading } = usePersonalInfo();
+  const { experiences: fetchedExperiences } = useExperiences();
+  const { education: fetchedEducation } = useEducation();
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -28,36 +33,23 @@ const About = () => {
     });
   }, []);
 
+  // Combine work experiences and education from backend
   const experiences = [
-    {
-      year: '2024',
-      title: 'Senior Full Stack Developer',
-      company: 'TechFlow Inc.',
-      description: 'Led development of scalable web applications serving 100K+ users',
-      type: 'work'
-    },
-    {
-      year: '2022',
-      title: 'Full Stack Developer',
-      company: 'StartupHub',
-      description: 'Built MVP for 3 successful startups using React and Node.js',
-      type: 'work'
-    },
-    {
-      year: '2021',
-      title: 'Frontend Developer',
-      company: 'Digital Agency Pro',
-      description: 'Created responsive websites for Fortune 500 companies',
-      type: 'work'
-    },
-    {
-      year: '2020',
-      title: 'Computer Science Degree',
-      company: 'Stanford University',
-      description: 'Graduated Magna Cum Laude with focus on Software Engineering',
-      type: 'education'
-    }
-  ];
+    ...fetchedExperiences.map(exp => ({
+      year: exp.period.split('-')[0].trim(),
+      title: exp.title,
+      company: exp.company,
+      description: exp.description,
+      type: 'work' as const
+    })),
+    ...fetchedEducation.map(edu => ({
+      year: edu.period.split('-')[0].trim(),
+      title: edu.degree,
+      company: edu.school,
+      description: edu.achievements?.[0] || `Studied at ${edu.school}`,
+      type: 'education' as const
+    }))
+  ].sort((a, b) => parseInt(b.year) - parseInt(a.year));
 
   // Group skills by category from database or use defaults
   const skillsByCategory = fetchedSkills.length > 0 
@@ -117,12 +109,17 @@ const About = () => {
   return (
     <>
       <SEOHead 
-        title="About - Jatin Sharma"
-        description="Learn about Jatin Sharma, a passionate full stack developer with 5+ years of experience building scalable web applications and digital solutions."
-        keywords="about, full stack developer, experience, skills, background, Jatin Sharma"
-        url="https://alexchen.dev/about"
+        title={`About - ${personalInfo?.full_name || 'Portfolio'}`}
+        description={`Learn about ${personalInfo?.full_name || 'me'}, ${personalInfo?.description || 'a passionate developer building amazing web applications.'}`}
+        keywords="about, full stack developer, experience, skills, background"
+        url={`${window.location.origin}/about`}
       />
       <div className="min-h-screen">
+        {loading ? (
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="animate-pulse text-lg">Loading...</div>
+          </div>
+        ) : (
         <div className="pt-16">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-hero/10">
@@ -173,24 +170,36 @@ const About = () => {
               </Button>
             </div>
 
-            <div className="reveal">
-              <div className="relative">
-                <div className="w-full h-96 bg-gradient-primary rounded-2xl p-1 pulse-glow">
-                  <div className="w-full h-full rounded-xl bg-muted flex items-center justify-center text-6xl font-bold text-primary">
-                    AC
-                  </div>
-                </div>
-                {/* Floating stats */}
-                <div className="absolute -top-6 -right-6 glass p-4 rounded-xl">
-                  <div className="text-2xl font-bold gradient-text">50+</div>
-                  <div className="text-sm text-muted-foreground">Projects</div>
-                </div>
-                <div className="absolute -bottom-6 -left-6 glass p-4 rounded-xl">
-                  <div className="text-2xl font-bold gradient-text">30+</div>
-                  <div className="text-sm text-muted-foreground">Happy Clients</div>
-                </div>
-              </div>
-            </div>
+             <div className="reveal">
+               <div className="relative">
+                 <div className="w-full h-96 bg-gradient-primary rounded-2xl p-1 pulse-glow">
+                   {personalInfo?.profile_image_url ? (
+                     <img 
+                       src={personalInfo.profile_image_url} 
+                       alt={personalInfo.full_name}
+                       className="w-full h-full rounded-xl object-cover"
+                     />
+                   ) : (
+                     <div className="w-full h-full rounded-xl bg-muted flex items-center justify-center text-6xl font-bold text-primary">
+                       {personalInfo?.full_name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'AC'}
+                     </div>
+                   )}
+                 </div>
+                 {/* Floating stats */}
+                 {personalInfo?.stats?.[0] && (
+                   <div className="absolute -top-6 -right-6 glass p-4 rounded-xl">
+                     <div className="text-2xl font-bold gradient-text">{personalInfo.stats[0].value}</div>
+                     <div className="text-sm text-muted-foreground">{personalInfo.stats[0].label}</div>
+                   </div>
+                 )}
+                 {personalInfo?.stats?.[3] && (
+                   <div className="absolute -bottom-6 -left-6 glass p-4 rounded-xl">
+                     <div className="text-2xl font-bold gradient-text">{personalInfo.stats[3].value}</div>
+                     <div className="text-sm text-muted-foreground">{personalInfo.stats[3].label}</div>
+                   </div>
+                 )}
+               </div>
+             </div>
           </div>
         </div>
       </section>
@@ -294,11 +303,12 @@ const About = () => {
             ))}
           </div>
           </div>
-        </section>
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default About;
+         </section>
+         </div>
+        )}
+       </div>
+     </>
+   );
+ };
+ 
+ export default About;
