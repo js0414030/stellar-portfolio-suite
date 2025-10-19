@@ -246,9 +246,11 @@ const Admin = () => {
                               {personalInfo.services && personalInfo.services.length > 0 ? (
                                 personalInfo.services.map((service, index) => (
                                   <div key={index} className="text-xs p-2 bg-primary/5 rounded">
-                                    <p className="font-bold">{service.title}</p>
-                                    <p className="text-muted-foreground">{service.description}</p>
-                                    <p className="text-muted-foreground">Tech: {service.technologies?.join(', ')}</p>
+                                    <p className="font-bold">{service.title || 'Untitled'}</p>
+                                    <p className="text-muted-foreground">{service.description || 'No description'}</p>
+                                    {service.technologies && Array.isArray(service.technologies) && service.technologies.length > 0 && (
+                                      <p className="text-muted-foreground">Tech: {service.technologies.join(', ')}</p>
+                                    )}
                                   </div>
                                 ))
                               ) : (
