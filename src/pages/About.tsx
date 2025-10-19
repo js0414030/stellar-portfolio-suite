@@ -35,14 +35,14 @@ const About = () => {
 
   // Combine work experiences and education from backend
   const experiences = [
-    ...fetchedExperiences.map(exp => ({
+    ...(fetchedExperiences || []).map(exp => ({
       year: exp.period.split('-')[0].trim(),
       title: exp.title,
       company: exp.company,
       description: exp.description,
       type: 'work' as const
     })),
-    ...fetchedEducation.map(edu => ({
+    ...(fetchedEducation || []).map(edu => ({
       year: edu.period.split('-')[0].trim(),
       title: edu.degree,
       company: edu.school,

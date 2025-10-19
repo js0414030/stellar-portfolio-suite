@@ -18,6 +18,7 @@ export const useSkills = () => {
   const fetchSkills = async () => {
     try {
       setLoading(true);
+      setError(null);
       const { data, error } = await supabase
         .from('skills')
         .select('*')
@@ -27,6 +28,7 @@ export const useSkills = () => {
       setSkills(data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      setSkills([]); // Ensure empty array on error
     } finally {
       setLoading(false);
     }

@@ -53,12 +53,15 @@ export const usePersonalInfo = () => {
       if (data) {
         setPersonalInfo({
           ...data,
-          stats: (data.stats as unknown) as Stat[],
+          stats: (data.stats as unknown) as Stat[] || [],
           services: (data.services as unknown) as Service[] || []
         });
+      } else {
+        setPersonalInfo(null);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch personal info');
+      setPersonalInfo(null);
       console.error('Error fetching personal info:', err);
     } finally {
       setLoading(false);
