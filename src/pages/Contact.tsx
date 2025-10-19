@@ -111,11 +111,6 @@ const Contact = () => {
         url={`${window.location.origin}/contact`}
       />
       <div className="min-h-screen">
-        {loading ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="animate-pulse text-lg">Loading...</div>
-          </div>
-        ) : (
         <div className="pt-16">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-hero/10">
@@ -354,7 +349,6 @@ const Contact = () => {
           </div>
         </section>
         </div>
-        )}
       </div>
     </>
   );

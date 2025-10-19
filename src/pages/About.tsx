@@ -10,10 +10,12 @@ import { useExperiences, useEducation } from '@/hooks/useExperience';
 
 const About = () => {
   const skillsRef = useRef<HTMLDivElement>(null);
-  const { skills: fetchedSkills } = useSkills();
-  const { personalInfo, loading } = usePersonalInfo();
-  const { experiences: fetchedExperiences } = useExperiences();
-  const { education: fetchedEducation } = useEducation();
+  const { skills: fetchedSkills, loading: skillsLoading } = useSkills();
+  const { personalInfo, loading: personalLoading } = usePersonalInfo();
+  const { experiences: fetchedExperiences, loading: experiencesLoading } = useExperiences();
+  const { education: fetchedEducation, loading: educationLoading } = useEducation();
+  
+  const loading = personalLoading && experiencesLoading && educationLoading && skillsLoading;
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -115,11 +117,6 @@ const About = () => {
         url={`${window.location.origin}/about`}
       />
       <div className="min-h-screen">
-        {loading ? (
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="animate-pulse text-lg">Loading...</div>
-          </div>
-        ) : (
         <div className="pt-16">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-hero/10">
@@ -305,7 +302,6 @@ const About = () => {
           </div>
          </section>
          </div>
-        )}
        </div>
      </>
    );
