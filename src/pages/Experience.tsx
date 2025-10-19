@@ -94,19 +94,19 @@ const Experience = () => {
               {/* Quick Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto reveal">
                 <div className="glass p-4 rounded-xl">
-                  <div className="text-2xl font-bold gradient-text">5+</div>
-                  <div className="text-sm text-muted-foreground">Years Experience</div>
+                  <div className="text-2xl font-bold gradient-text">{experiences.length}</div>
+                  <div className="text-sm text-muted-foreground">Experiences</div>
                 </div>
                 <div className="glass p-4 rounded-xl">
-                  <div className="text-2xl font-bold gradient-text">4</div>
-                  <div className="text-sm text-muted-foreground">Companies</div>
+                  <div className="text-2xl font-bold gradient-text">{education.length}</div>
+                  <div className="text-sm text-muted-foreground">Education</div>
                 </div>
                 <div className="glass p-4 rounded-xl">
-                  <div className="text-2xl font-bold gradient-text">50+</div>
-                  <div className="text-sm text-muted-foreground">Projects</div>
+                  <div className="text-2xl font-bold gradient-text">{certifications.length}</div>
+                  <div className="text-sm text-muted-foreground">Certifications</div>
                 </div>
                 <div className="glass p-4 rounded-xl">
-                  <div className="text-2xl font-bold gradient-text">20+</div>
+                  <div className="text-2xl font-bold gradient-text">{[...new Set(experiences.flatMap(e => e.technologies))].length}</div>
                   <div className="text-sm text-muted-foreground">Technologies</div>
                 </div>
               </div>

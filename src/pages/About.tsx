@@ -134,37 +134,36 @@ const About = () => {
 
               <div className="prose prose-lg text-muted-foreground">
                 <p>
-                  I'm a full-stack developer with over 5 years of experience building scalable web applications. 
-                  My journey began with a fascination for how technology can solve real-world problems and create 
-                  meaningful user experiences.
-                </p>
-                <p>
-                  I specialize in modern JavaScript frameworks, cloud architecture, and user-centered design. 
-                  When I'm not coding, you'll find me exploring new technologies, contributing to open source, 
-                  or mentoring aspiring developers.
+                  {personalInfo?.description || "I'm a full-stack developer with over 5 years of experience building scalable web applications. My journey began with a fascination for how technology can solve real-world problems and create meaningful user experiences."}
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Badge variant="secondary" className="glass">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  San Francisco, CA
-                </Badge>
+                {personalInfo?.location && (
+                  <Badge variant="secondary" className="glass">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    {personalInfo.location}
+                  </Badge>
+                )}
                 <Badge variant="secondary" className="glass">
                   <Users className="w-4 h-4 mr-2" />
                   Available for hire
                 </Badge>
-                <Badge variant="secondary" className="glass">
-                  <Award className="w-4 h-4 mr-2" />
-                  5+ Years Experience
-                </Badge>
+                {personalInfo?.stats?.[1] && (
+                  <Badge variant="secondary" className="glass">
+                    <Award className="w-4 h-4 mr-2" />
+                    {personalInfo.stats[1].value} {personalInfo.stats[1].label}
+                  </Badge>
+                )}
               </div>
 
-              <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300" asChild>
-                <a href="/resume.pdf" download>
-                  Download Resume
-                </a>
-              </Button>
+              {personalInfo?.resume_url && (
+                <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300" asChild>
+                  <a href={personalInfo.resume_url} download>
+                    Download Resume
+                  </a>
+                </Button>
+              )}
             </div>
 
              <div className="reveal">

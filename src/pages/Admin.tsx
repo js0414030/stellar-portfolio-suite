@@ -108,6 +108,8 @@ const Admin = () => {
           console.error('Error parsing services:', e);
           data[key] = [];
         }
+      } else if (key === 'featured') {
+        data[key] = formData.get(key) === 'on';
       } else {
         data[key] = value;
       }
@@ -507,6 +509,16 @@ const Admin = () => {
                 <div>
                   <Label htmlFor="live_url">Live URL</Label>
                   <Input id="live_url" name="live_url" defaultValue={editingItem?.live_url} />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input 
+                    type="checkbox" 
+                    id="featured" 
+                    name="featured" 
+                    defaultChecked={editingItem?.featured || false}
+                    className="w-4 h-4"
+                  />
+                  <Label htmlFor="featured" className="cursor-pointer">Featured Project</Label>
                 </div>
               </>
             )}
