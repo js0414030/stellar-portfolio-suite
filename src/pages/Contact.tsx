@@ -278,9 +278,9 @@ const Contact = () => {
               </div>
 
               <div className="space-y-4">
-                {services.map((service, index) => (
+                {services.length > 0 ? services.map((service, index) => (
                   <Card 
-                    key={service.title}
+                    key={service.title || index}
                     className="glass border-primary/20 hover:border-primary/40 transition-all duration-300"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
@@ -291,16 +291,24 @@ const Contact = () => {
                       <p className="text-muted-foreground text-sm mb-3">
                         {service.description}
                       </p>
-                      <div className="flex flex-wrap gap-1">
-                        {service.technologies.map((tech) => (
-                          <Badge key={tech} variant="secondary" className="text-xs glass">
-                            {tech}
-                          </Badge>
-                        ))}
-                      </div>
+                      {service.technologies && Array.isArray(service.technologies) && (
+                        <div className="flex flex-wrap gap-1">
+                          {service.technologies.map((tech, techIndex) => (
+                            <Badge key={tech || techIndex} variant="secondary" className="text-xs glass">
+                              {tech}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
-                ))}
+                )) : (
+                  <Card className="glass border-primary/20">
+                    <CardContent className="p-6 text-center text-muted-foreground">
+                      Services information will be displayed here once configured.
+                    </CardContent>
+                  </Card>
+                )}
               </div>
 
               {/* Social Links */}
