@@ -38,75 +38,44 @@ const About = () => {
   // Combine work experiences and education from backend
   const experiences = [
     ...(fetchedExperiences || []).map(exp => ({
-      year: exp.period.split('-')[0].trim(),
+      year: exp.period.split('-')[0]?.trim() || exp.period,
       title: exp.title,
       company: exp.company,
       description: exp.description,
       type: 'work' as const
     })),
     ...(fetchedEducation || []).map(edu => ({
-      year: edu.period.split('-')[0].trim(),
+      year: edu.period.split('-')[0]?.trim() || edu.period,
       title: edu.degree,
       company: edu.school,
       description: edu.achievements?.[0] || `Studied at ${edu.school}`,
       type: 'education' as const
     }))
-  ].sort((a, b) => parseInt(b.year) - parseInt(a.year));
+  ].sort((a, b) => {
+    const yearA = parseInt(a.year) || 0;
+    const yearB = parseInt(b.year) || 0;
+    return yearB - yearA;
+  });
 
-  // Group skills by category from database or use defaults
-  const skillsByCategory = fetchedSkills.length > 0 
-    ? fetchedSkills.reduce((acc, skill) => {
-        if (!acc[skill.category]) {
-          acc[skill.category] = [];
-        }
-        acc[skill.category].push({ 
-          name: skill.name, 
-          level: skill.level ? parseInt(skill.level) : 80 
-        });
-        return acc;
-      }, {} as Record<string, { name: string; level: number }[]>)
-    : {};
+  // Group skills by category from database
+  const skillsByCategory = fetchedSkills.reduce((acc, skill) => {
+    if (!acc[skill.category]) {
+      acc[skill.category] = [];
+    }
+    acc[skill.category].push({ 
+      name: skill.name, 
+      level: skill.level ? parseInt(skill.level) : 80 
+    });
+    return acc;
+  }, {} as Record<string, { name: string; level: number }[]>);
 
-  const skills = Object.keys(skillsByCategory).length > 0
-    ? Object.entries(skillsByCategory).map(([category, items]) => ({
-        category,
-        icon: category.toLowerCase().includes('design') 
-          ? <Palette className="w-5 h-5" />
-          : <Code className="w-5 h-5" />,
-        items
-      }))
-    : [
-        {
-          category: 'Frontend',
-          icon: <Code className="w-5 h-5" />,
-          items: [
-            { name: 'React/Next.js', level: 95 },
-            { name: 'TypeScript', level: 90 },
-            { name: 'Tailwind CSS', level: 95 },
-            { name: 'Vue.js', level: 80 }
-          ]
-        },
-        {
-          category: 'Backend',
-          icon: <Code className="w-5 h-5" />,
-          items: [
-            { name: 'Node.js', level: 90 },
-            { name: 'Python', level: 85 },
-            { name: 'PostgreSQL', level: 88 },
-            { name: 'GraphQL', level: 82 }
-          ]
-        },
-        {
-          category: 'Design',
-          icon: <Palette className="w-5 h-5" />,
-          items: [
-            { name: 'Figma', level: 90 },
-            { name: 'UI/UX Design', level: 85 },
-            { name: 'Prototyping', level: 88 },
-            { name: 'Design Systems', level: 92 }
-          ]
-        }
-      ];
+  const skills = Object.entries(skillsByCategory).map(([category, items]) => ({
+    category,
+    icon: category.toLowerCase().includes('design') 
+      ? <Palette className="w-5 h-5" />
+      : <Code className="w-5 h-5" />,
+    items
+  }));
 
   return (
     <>
@@ -210,12 +179,14 @@ const About = () => {
             </p>
           </div>
 
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-primary opacity-30" />
+            <div className="relative">
+              {experiences.length > 0 ? (
+                <>
+                  {/* Timeline line */}
+                  <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-primary opacity-30" />
 
-            <div className="space-y-12">
-              {experiences.map((exp, index) => (
+                  <div className="space-y-12">
+                    {experiences.map((exp, index) => (
                 <div 
                   key={index}
                   className="relative flex items-start space-x-8 reveal"
@@ -246,6 +217,15 @@ const About = () => {
                 </div>
               ))}
             </div>
+          </>
+        ) : (
+          <Card className="glass border-primary/20">
+            <CardContent className="p-8 text-center">
+              <p className="text-muted-foreground mb-2">No experience or education data yet.</p>
+              <p className="text-sm text-muted-foreground">Add your work experience and education in the Admin Panel to display your journey here.</p>
+            </CardContent>
+          </Card>
+        )}
           </div>
         </div>
       </section>
@@ -261,7 +241,7 @@ const About = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {skills.map((skillCategory, categoryIndex) => (
+            {skills.length > 0 ? skills.map((skillCategory, categoryIndex) => (
               <Card 
                 key={skillCategory.category}
                 className="glass border-primary/20 hover:border-primary/40 transition-all duration-300 reveal"
@@ -296,7 +276,14 @@ const About = () => {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            )) : (
+              <Card className="glass border-primary/20 col-span-3">
+                <CardContent className="p-8 text-center">
+                  <p className="text-muted-foreground mb-2">No skills data yet.</p>
+                  <p className="text-sm text-muted-foreground">Add your skills in the Admin Panel to showcase your expertise here.</p>
+                </CardContent>
+              </Card>
+            )}
           </div>
           </div>
          </section>

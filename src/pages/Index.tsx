@@ -41,10 +41,7 @@ const Index = () => {
     return () => clearInterval(typingInterval);
   }, [currentRole]);
 
-  const displayedSkills = fetchedSkills.length > 0 
-    ? fetchedSkills.slice(0, 12).map(s => s.name)
-    : ['React', 'TypeScript', 'Node.js', 'Python', 'AWS', 'GraphQL',
-       'Docker', 'PostgreSQL', 'MongoDB', 'Redis', 'Kubernetes', 'Figma'];
+  const displayedSkills = fetchedSkills.slice(0, 12).map(s => s.name);
 
   return (
     <>

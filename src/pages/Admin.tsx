@@ -285,9 +285,17 @@ const Admin = () => {
                     <CardTitle>Projects</CardTitle>
                     <Button onClick={() => openDialog('project')}><Plus className="w-4 h-4 mr-2" />Add Project</Button>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {projects.map((project) => (
+                   <CardContent>
+                     {projects.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground mb-4">No projects yet</p>
+                         <Button onClick={() => openDialog('project')} variant="outline">
+                           <Plus className="w-4 h-4 mr-2" />Add Your First Project
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         {projects.map((project) => (
                         <div key={project.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div className="flex-1">
                             <h3 className="font-semibold">{project.title}</h3>
@@ -306,10 +314,11 @@ const Admin = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
 
@@ -320,9 +329,17 @@ const Admin = () => {
                     <CardTitle>Work Experience</CardTitle>
                     <Button onClick={() => openDialog('experience')}><Plus className="w-4 h-4 mr-2" />Add Experience</Button>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {experiences.map((exp) => (
+                   <CardContent>
+                     {experiences.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground mb-4">No work experiences yet</p>
+                         <Button onClick={() => openDialog('experience')} variant="outline">
+                           <Plus className="w-4 h-4 mr-2" />Add Your First Experience
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         {experiences.map((exp) => (
                         <div key={exp.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div className="flex-1">
                             <h3 className="font-semibold">{exp.title} at {exp.company}</h3>
@@ -337,10 +354,11 @@ const Admin = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
 
@@ -351,9 +369,17 @@ const Admin = () => {
                     <CardTitle>Skills</CardTitle>
                     <Button onClick={() => openDialog('skill')}><Plus className="w-4 h-4 mr-2" />Add Skill</Button>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {skills.map((skill) => (
+                   <CardContent>
+                     {skills.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground mb-4">No skills yet</p>
+                         <Button onClick={() => openDialog('skill')} variant="outline">
+                           <Plus className="w-4 h-4 mr-2" />Add Your First Skill
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                         {skills.map((skill) => (
                         <div key={skill.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div>
                             <h3 className="font-semibold">{skill.name}</h3>
@@ -368,10 +394,11 @@ const Admin = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
 
@@ -382,9 +409,17 @@ const Admin = () => {
                     <CardTitle>Education</CardTitle>
                     <Button onClick={() => openDialog('education')}><Plus className="w-4 h-4 mr-2" />Add Education</Button>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {education.map((edu) => (
+                   <CardContent>
+                     {education.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground mb-4">No education records yet</p>
+                         <Button onClick={() => openDialog('education')} variant="outline">
+                           <Plus className="w-4 h-4 mr-2" />Add Your First Education
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         {education.map((edu) => (
                         <div key={edu.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div className="flex-1">
                             <h3 className="font-semibold">{edu.degree}</h3>
@@ -399,10 +434,11 @@ const Admin = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
 
@@ -413,9 +449,17 @@ const Admin = () => {
                     <CardTitle>Certifications</CardTitle>
                     <Button onClick={() => openDialog('certification')}><Plus className="w-4 h-4 mr-2" />Add Certification</Button>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {certifications.map((cert) => (
+                   <CardContent>
+                     {certifications.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground mb-4">No certifications yet</p>
+                         <Button onClick={() => openDialog('certification')} variant="outline">
+                           <Plus className="w-4 h-4 mr-2" />Add Your First Certification
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         {certifications.map((cert) => (
                         <div key={cert.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div className="flex-1">
                             <h3 className="font-semibold">{cert.name}</h3>
@@ -430,10 +474,11 @@ const Admin = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
 
@@ -443,9 +488,14 @@ const Admin = () => {
                   <CardHeader>
                     <CardTitle>Contact Messages</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {messages.map((msg) => (
+                   <CardContent>
+                     {messages.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground">No contact messages yet</p>
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         {messages.map((msg) => (
                         <div key={msg.id} className="p-4 border rounded-lg">
                           <div className="flex justify-between items-start mb-2">
                             <div>
@@ -458,10 +508,11 @@ const Admin = () => {
                           </div>
                           <p className="font-medium text-sm mb-2">Subject: {msg.subject}</p>
                           <p className="text-sm text-muted-foreground">{msg.message}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
             </Tabs>
