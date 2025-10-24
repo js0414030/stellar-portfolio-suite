@@ -14,6 +14,8 @@ import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Experience from "./pages/Experience";
 import Contact from "./pages/Contact";
+import ScrollToTop from "./components/ScrollToTop";
+// import ScrollProgress from "./components/ScrollProgress";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -29,6 +31,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+          <ScrollToTop />
             <ScrollProgress />
             <Navigation />
             <main className="relative pt-16">
