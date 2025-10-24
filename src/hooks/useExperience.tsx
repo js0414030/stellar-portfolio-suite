@@ -47,6 +47,7 @@ export const useExperiences = () => {
   const fetchExperiences = async () => {
     try {
       setLoading(true);
+      setError(null);
       const { data, error } = await supabase
         .from('experiences')
         .select('*')
@@ -56,6 +57,7 @@ export const useExperiences = () => {
       setExperiences(data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      setExperiences([]); // Ensure empty array on error
     } finally {
       setLoading(false);
     }
@@ -76,6 +78,7 @@ export const useEducation = () => {
   const fetchEducation = async () => {
     try {
       setLoading(true);
+      setError(null);
       const { data, error } = await supabase
         .from('education')
         .select('*')
@@ -85,6 +88,7 @@ export const useEducation = () => {
       setEducation(data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      setEducation([]); // Ensure empty array on error
     } finally {
       setLoading(false);
     }
@@ -105,6 +109,7 @@ export const useCertifications = () => {
   const fetchCertifications = async () => {
     try {
       setLoading(true);
+      setError(null);
       const { data, error } = await supabase
         .from('certifications')
         .select('*')
@@ -114,6 +119,7 @@ export const useCertifications = () => {
       setCertifications(data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      setCertifications([]); // Ensure empty array on error
     } finally {
       setLoading(false);
     }

@@ -96,9 +96,20 @@ const Admin = () => {
       } else if (key === 'stats') {
         try {
           data[key] = JSON.parse(value.toString());
-        } catch {
+        } catch (e) {
+          console.error('Error parsing stats:', e);
           data[key] = [];
         }
+      } else if (key === 'services') {
+        try {
+          const parsed = JSON.parse(value.toString());
+          data[key] = parsed;
+        } catch (e) {
+          console.error('Error parsing services:', e);
+          data[key] = [];
+        }
+      } else if (key === 'featured') {
+        data[key] = formData.get(key) === 'on';
       } else {
         data[key] = value;
       }
@@ -211,12 +222,42 @@ const Admin = () => {
                             <p className="text-sm text-muted-foreground">Resume URL</p>
                             <p className="font-semibold">{personalInfo.resume_url || 'Not set'}</p>
                           </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Phone</p>
+                            <p className="font-semibold">{personalInfo.phone || 'Not set'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Location</p>
+                            <p className="font-semibold">{personalInfo.location || 'Not set'}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Twitter URL</p>
+                            <p className="font-semibold">{personalInfo.twitter_url || 'Not set'}</p>
+                          </div>
                           <div className="col-span-2">
                             <p className="text-sm text-muted-foreground">Roles</p>
                             <div className="flex gap-2 flex-wrap mt-1">
                               {personalInfo.roles.map((role, index) => (
                                 <span key={index} className="text-xs px-2 py-1 bg-primary/10 rounded">{role}</span>
                               ))}
+                            </div>
+                          </div>
+                          <div className="col-span-2">
+                            <p className="text-sm text-muted-foreground">Services</p>
+                            <div className="space-y-2 mt-1">
+                              {personalInfo.services && personalInfo.services.length > 0 ? (
+                                personalInfo.services.map((service, index) => (
+                                  <div key={index} className="text-xs p-2 bg-primary/5 rounded">
+                                    <p className="font-bold">{service.title || 'Untitled'}</p>
+                                    <p className="text-muted-foreground">{service.description || 'No description'}</p>
+                                    {service.technologies && Array.isArray(service.technologies) && service.technologies.length > 0 && (
+                                      <p className="text-muted-foreground">Tech: {service.technologies.join(', ')}</p>
+                                    )}
+                                  </div>
+                                ))
+                              ) : (
+                                <p className="text-xs text-muted-foreground">No services added</p>
+                              )}
                             </div>
                           </div>
                           <div className="col-span-2">
@@ -244,9 +285,17 @@ const Admin = () => {
                     <CardTitle>Projects</CardTitle>
                     <Button onClick={() => openDialog('project')}><Plus className="w-4 h-4 mr-2" />Add Project</Button>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {projects.map((project) => (
+                   <CardContent>
+                     {projects.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground mb-4">No projects yet</p>
+                         <Button onClick={() => openDialog('project')} variant="outline">
+                           <Plus className="w-4 h-4 mr-2" />Add Your First Project
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         {projects.map((project) => (
                         <div key={project.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div className="flex-1">
                             <h3 className="font-semibold">{project.title}</h3>
@@ -265,10 +314,11 @@ const Admin = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
 
@@ -279,9 +329,17 @@ const Admin = () => {
                     <CardTitle>Work Experience</CardTitle>
                     <Button onClick={() => openDialog('experience')}><Plus className="w-4 h-4 mr-2" />Add Experience</Button>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {experiences.map((exp) => (
+                   <CardContent>
+                     {experiences.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground mb-4">No work experiences yet</p>
+                         <Button onClick={() => openDialog('experience')} variant="outline">
+                           <Plus className="w-4 h-4 mr-2" />Add Your First Experience
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         {experiences.map((exp) => (
                         <div key={exp.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div className="flex-1">
                             <h3 className="font-semibold">{exp.title} at {exp.company}</h3>
@@ -296,10 +354,11 @@ const Admin = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
 
@@ -310,9 +369,17 @@ const Admin = () => {
                     <CardTitle>Skills</CardTitle>
                     <Button onClick={() => openDialog('skill')}><Plus className="w-4 h-4 mr-2" />Add Skill</Button>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {skills.map((skill) => (
+                   <CardContent>
+                     {skills.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground mb-4">No skills yet</p>
+                         <Button onClick={() => openDialog('skill')} variant="outline">
+                           <Plus className="w-4 h-4 mr-2" />Add Your First Skill
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                         {skills.map((skill) => (
                         <div key={skill.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div>
                             <h3 className="font-semibold">{skill.name}</h3>
@@ -327,10 +394,11 @@ const Admin = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
 
@@ -341,9 +409,17 @@ const Admin = () => {
                     <CardTitle>Education</CardTitle>
                     <Button onClick={() => openDialog('education')}><Plus className="w-4 h-4 mr-2" />Add Education</Button>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {education.map((edu) => (
+                   <CardContent>
+                     {education.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground mb-4">No education records yet</p>
+                         <Button onClick={() => openDialog('education')} variant="outline">
+                           <Plus className="w-4 h-4 mr-2" />Add Your First Education
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         {education.map((edu) => (
                         <div key={edu.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div className="flex-1">
                             <h3 className="font-semibold">{edu.degree}</h3>
@@ -358,10 +434,11 @@ const Admin = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
 
@@ -372,9 +449,17 @@ const Admin = () => {
                     <CardTitle>Certifications</CardTitle>
                     <Button onClick={() => openDialog('certification')}><Plus className="w-4 h-4 mr-2" />Add Certification</Button>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {certifications.map((cert) => (
+                   <CardContent>
+                     {certifications.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground mb-4">No certifications yet</p>
+                         <Button onClick={() => openDialog('certification')} variant="outline">
+                           <Plus className="w-4 h-4 mr-2" />Add Your First Certification
+                         </Button>
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         {certifications.map((cert) => (
                         <div key={cert.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div className="flex-1">
                             <h3 className="font-semibold">{cert.name}</h3>
@@ -389,10 +474,11 @@ const Admin = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
 
@@ -402,9 +488,14 @@ const Admin = () => {
                   <CardHeader>
                     <CardTitle>Contact Messages</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {messages.map((msg) => (
+                   <CardContent>
+                     {messages.length === 0 ? (
+                       <div className="text-center py-8">
+                         <p className="text-muted-foreground">No contact messages yet</p>
+                       </div>
+                     ) : (
+                       <div className="space-y-4">
+                         {messages.map((msg) => (
                         <div key={msg.id} className="p-4 border rounded-lg">
                           <div className="flex justify-between items-start mb-2">
                             <div>
@@ -417,10 +508,11 @@ const Admin = () => {
                           </div>
                           <p className="font-medium text-sm mb-2">Subject: {msg.subject}</p>
                           <p className="text-sm text-muted-foreground">{msg.message}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
+                         </div>
+                       ))}
+                     </div>
+                     )}
+                   </CardContent>
                 </Card>
               </TabsContent>
             </Tabs>
@@ -468,6 +560,16 @@ const Admin = () => {
                 <div>
                   <Label htmlFor="live_url">Live URL</Label>
                   <Input id="live_url" name="live_url" defaultValue={editingItem?.live_url} />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input 
+                    type="checkbox" 
+                    id="featured" 
+                    name="featured" 
+                    defaultChecked={editingItem?.featured || false}
+                    className="w-4 h-4"
+                  />
+                  <Label htmlFor="featured" className="cursor-pointer">Featured Project</Label>
                 </div>
               </>
             )}
@@ -615,6 +717,18 @@ const Admin = () => {
                   <Input id="linkedin_url" name="linkedin_url" defaultValue={editingItem?.linkedin_url} />
                 </div>
                 <div>
+                  <Label htmlFor="twitter_url">Twitter URL</Label>
+                  <Input id="twitter_url" name="twitter_url" defaultValue={editingItem?.twitter_url} />
+                </div>
+                <div>
+                  <Label htmlFor="phone">Phone</Label>
+                  <Input id="phone" name="phone" defaultValue={editingItem?.phone} />
+                </div>
+                <div>
+                  <Label htmlFor="location">Location</Label>
+                  <Input id="location" name="location" defaultValue={editingItem?.location} />
+                </div>
+                <div>
                   <Label htmlFor="roles">Roles (comma separated)</Label>
                   <Textarea id="roles" name="roles" defaultValue={editingItem?.roles?.join(', ')} required />
                 </div>
@@ -630,6 +744,19 @@ const Admin = () => {
                   />
                   <p className="text-xs text-muted-foreground mt-1">
                     Format: Array of objects with "label" and "value" properties
+                  </p>
+                </div>
+                <div>
+                  <Label htmlFor="services">Services (JSON format)</Label>
+                  <Textarea 
+                    id="services" 
+                    name="services" 
+                    defaultValue={JSON.stringify(editingItem?.services || [], null, 2)} 
+                    placeholder='[{"title": "Web Development", "description": "...", "technologies": ["React", "Node.js"]}]'
+                    rows={8}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Format: Array of objects with "title", "description", and "technologies" (array) properties
                   </p>
                 </div>
               </>

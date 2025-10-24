@@ -5,10 +5,17 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import SEOHead from '@/components/SEOHead';
 import { useSkills } from '@/hooks/useSkills';
+import { usePersonalInfo } from '@/hooks/usePersonalInfo';
+import { useExperiences, useEducation } from '@/hooks/useExperience';
 
 const About = () => {
   const skillsRef = useRef<HTMLDivElement>(null);
-  const { skills: fetchedSkills } = useSkills();
+  const { skills: fetchedSkills, loading: skillsLoading } = useSkills();
+  const { personalInfo, loading: personalLoading } = usePersonalInfo();
+  const { experiences: fetchedExperiences, loading: experiencesLoading } = useExperiences();
+  const { education: fetchedEducation, loading: educationLoading } = useEducation();
+  
+  const loading = personalLoading && experiencesLoading && educationLoading && skillsLoading;
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -28,99 +35,55 @@ const About = () => {
     });
   }, []);
 
+  // Combine work experiences and education from backend
   const experiences = [
-    {
-      year: '2024',
-      title: 'Senior Full Stack Developer',
-      company: 'TechFlow Inc.',
-      description: 'Led development of scalable web applications serving 100K+ users',
-      type: 'work'
-    },
-    {
-      year: '2022',
-      title: 'Full Stack Developer',
-      company: 'StartupHub',
-      description: 'Built MVP for 3 successful startups using React and Node.js',
-      type: 'work'
-    },
-    {
-      year: '2021',
-      title: 'Frontend Developer',
-      company: 'Digital Agency Pro',
-      description: 'Created responsive websites for Fortune 500 companies',
-      type: 'work'
-    },
-    {
-      year: '2020',
-      title: 'Computer Science Degree',
-      company: 'Stanford University',
-      description: 'Graduated Magna Cum Laude with focus on Software Engineering',
-      type: 'education'
+    ...(fetchedExperiences || []).map(exp => ({
+      year: exp.period.split('-')[0]?.trim() || exp.period,
+      title: exp.title,
+      company: exp.company,
+      description: exp.description,
+      type: 'work' as const
+    })),
+    ...(fetchedEducation || []).map(edu => ({
+      year: edu.period.split('-')[0]?.trim() || edu.period,
+      title: edu.degree,
+      company: edu.school,
+      description: edu.achievements?.[0] || `Studied at ${edu.school}`,
+      type: 'education' as const
+    }))
+  ].sort((a, b) => {
+    const yearA = parseInt(a.year) || 0;
+    const yearB = parseInt(b.year) || 0;
+    return yearB - yearA;
+  });
+
+  // Group skills by category from database
+  const skillsByCategory = fetchedSkills.reduce((acc, skill) => {
+    if (!acc[skill.category]) {
+      acc[skill.category] = [];
     }
-  ];
+    acc[skill.category].push({ 
+      name: skill.name, 
+      level: skill.level ? parseInt(skill.level) : 80 
+    });
+    return acc;
+  }, {} as Record<string, { name: string; level: number }[]>);
 
-  // Group skills by category from database or use defaults
-  const skillsByCategory = fetchedSkills.length > 0 
-    ? fetchedSkills.reduce((acc, skill) => {
-        if (!acc[skill.category]) {
-          acc[skill.category] = [];
-        }
-        acc[skill.category].push({ 
-          name: skill.name, 
-          level: skill.level ? parseInt(skill.level) : 80 
-        });
-        return acc;
-      }, {} as Record<string, { name: string; level: number }[]>)
-    : {};
-
-  const skills = Object.keys(skillsByCategory).length > 0
-    ? Object.entries(skillsByCategory).map(([category, items]) => ({
-        category,
-        icon: category.toLowerCase().includes('design') 
-          ? <Palette className="w-5 h-5" />
-          : <Code className="w-5 h-5" />,
-        items
-      }))
-    : [
-        {
-          category: 'Frontend',
-          icon: <Code className="w-5 h-5" />,
-          items: [
-            { name: 'React/Next.js', level: 95 },
-            { name: 'TypeScript', level: 90 },
-            { name: 'Tailwind CSS', level: 95 },
-            { name: 'Vue.js', level: 80 }
-          ]
-        },
-        {
-          category: 'Backend',
-          icon: <Code className="w-5 h-5" />,
-          items: [
-            { name: 'Node.js', level: 90 },
-            { name: 'Python', level: 85 },
-            { name: 'PostgreSQL', level: 88 },
-            { name: 'GraphQL', level: 82 }
-          ]
-        },
-        {
-          category: 'Design',
-          icon: <Palette className="w-5 h-5" />,
-          items: [
-            { name: 'Figma', level: 90 },
-            { name: 'UI/UX Design', level: 85 },
-            { name: 'Prototyping', level: 88 },
-            { name: 'Design Systems', level: 92 }
-          ]
-        }
-      ];
+  const skills = Object.entries(skillsByCategory).map(([category, items]) => ({
+    category,
+    icon: category.toLowerCase().includes('design') 
+      ? <Palette className="w-5 h-5" />
+      : <Code className="w-5 h-5" />,
+    items
+  }));
 
   return (
     <>
       <SEOHead 
-        title="About - Jatin Sharma"
-        description="Learn about Jatin Sharma, a passionate full stack developer with 5+ years of experience building scalable web applications and digital solutions."
-        keywords="about, full stack developer, experience, skills, background, Jatin Sharma"
-        url="https://alexchen.dev/about"
+        title={`About - ${personalInfo?.full_name || 'Portfolio'}`}
+        description={`Learn about ${personalInfo?.full_name || 'me'}, ${personalInfo?.description || 'a passionate developer building amazing web applications.'}`}
+        keywords="about, full stack developer, experience, skills, background"
+        url={`${window.location.origin}/about`}
       />
       <div className="min-h-screen">
         <div className="pt-16">
@@ -140,57 +103,68 @@ const About = () => {
 
               <div className="prose prose-lg text-muted-foreground">
                 <p>
-                  I'm a full-stack developer with over 5 years of experience building scalable web applications. 
-                  My journey began with a fascination for how technology can solve real-world problems and create 
-                  meaningful user experiences.
-                </p>
-                <p>
-                  I specialize in modern JavaScript frameworks, cloud architecture, and user-centered design. 
-                  When I'm not coding, you'll find me exploring new technologies, contributing to open source, 
-                  or mentoring aspiring developers.
+                  {personalInfo?.description || "I'm a full-stack developer with over 5 years of experience building scalable web applications. My journey began with a fascination for how technology can solve real-world problems and create meaningful user experiences."}
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-3">
-                <Badge variant="secondary" className="glass">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  San Francisco, CA
-                </Badge>
+                {personalInfo?.location && (
+                  <Badge variant="secondary" className="glass">
+                    <MapPin className="w-4 h-4 mr-2" />
+                    {personalInfo.location}
+                  </Badge>
+                )}
                 <Badge variant="secondary" className="glass">
                   <Users className="w-4 h-4 mr-2" />
                   Available for hire
                 </Badge>
-                <Badge variant="secondary" className="glass">
-                  <Award className="w-4 h-4 mr-2" />
-                  5+ Years Experience
-                </Badge>
+                {personalInfo?.stats?.[1] && (
+                  <Badge variant="secondary" className="glass">
+                    <Award className="w-4 h-4 mr-2" />
+                    {personalInfo.stats[1].value} {personalInfo.stats[1].label}
+                  </Badge>
+                )}
               </div>
 
-              <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300" asChild>
-                <a href="/resume.pdf" download>
-                  Download Resume
-                </a>
-              </Button>
+              {personalInfo?.resume_url && (
+                <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300" asChild>
+                  <a href={personalInfo.resume_url} download>
+                    Download Resume
+                  </a>
+                </Button>
+              )}
             </div>
 
-            <div className="reveal">
-              <div className="relative">
-                <div className="w-full h-96 bg-gradient-primary rounded-2xl p-1 pulse-glow">
-                  <div className="w-full h-full rounded-xl bg-muted flex items-center justify-center text-6xl font-bold text-primary">
-                    AC
-                  </div>
-                </div>
-                {/* Floating stats */}
-                <div className="absolute -top-6 -right-6 glass p-4 rounded-xl">
-                  <div className="text-2xl font-bold gradient-text">50+</div>
-                  <div className="text-sm text-muted-foreground">Projects</div>
-                </div>
-                <div className="absolute -bottom-6 -left-6 glass p-4 rounded-xl">
-                  <div className="text-2xl font-bold gradient-text">30+</div>
-                  <div className="text-sm text-muted-foreground">Happy Clients</div>
-                </div>
-              </div>
-            </div>
+             <div className="reveal">
+               <div className="relative">
+                 <div className="w-full h-96 bg-gradient-primary rounded-2xl p-1 pulse-glow">
+                   {personalInfo?.profile_image_url ? (
+                     <img 
+                       src={personalInfo.profile_image_url} 
+                       alt={personalInfo.full_name}
+                       className="w-full h-full rounded-xl object-cover"
+                     />
+                   ) : (
+                     <div className="w-full h-full rounded-xl bg-muted flex items-center justify-center text-6xl font-bold text-primary">
+                       {personalInfo?.full_name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'AC'}
+                     </div>
+                   )}
+                 </div>
+                 {/* Floating stats */}
+                 {personalInfo?.stats?.[0] && (
+                   <div className="absolute -top-6 -right-6 glass p-4 rounded-xl">
+                     <div className="text-2xl font-bold gradient-text">{personalInfo.stats[0].value}</div>
+                     <div className="text-sm text-muted-foreground">{personalInfo.stats[0].label}</div>
+                   </div>
+                 )}
+                 {personalInfo?.stats?.[3] && (
+                   <div className="absolute -bottom-6 -left-6 glass p-4 rounded-xl">
+                     <div className="text-2xl font-bold gradient-text">{personalInfo.stats[3].value}</div>
+                     <div className="text-sm text-muted-foreground">{personalInfo.stats[3].label}</div>
+                   </div>
+                 )}
+               </div>
+             </div>
           </div>
         </div>
       </section>
@@ -205,12 +179,14 @@ const About = () => {
             </p>
           </div>
 
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-primary opacity-30" />
+            <div className="relative">
+              {experiences.length > 0 ? (
+                <>
+                  {/* Timeline line */}
+                  <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-primary opacity-30" />
 
-            <div className="space-y-12">
-              {experiences.map((exp, index) => (
+                  <div className="space-y-12">
+                    {experiences.map((exp, index) => (
                 <div 
                   key={index}
                   className="relative flex items-start space-x-8 reveal"
@@ -241,6 +217,15 @@ const About = () => {
                 </div>
               ))}
             </div>
+          </>
+        ) : (
+          <Card className="glass border-primary/20">
+            <CardContent className="p-8 text-center">
+              <p className="text-muted-foreground mb-2">No experience or education data yet.</p>
+              <p className="text-sm text-muted-foreground">Add your work experience and education in the Admin Panel to display your journey here.</p>
+            </CardContent>
+          </Card>
+        )}
           </div>
         </div>
       </section>
@@ -256,7 +241,7 @@ const About = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {skills.map((skillCategory, categoryIndex) => (
+            {skills.length > 0 ? skills.map((skillCategory, categoryIndex) => (
               <Card 
                 key={skillCategory.category}
                 className="glass border-primary/20 hover:border-primary/40 transition-all duration-300 reveal"
@@ -291,14 +276,21 @@ const About = () => {
                   </div>
                 </CardContent>
               </Card>
-            ))}
+            )) : (
+              <Card className="glass border-primary/20 col-span-3">
+                <CardContent className="p-8 text-center">
+                  <p className="text-muted-foreground mb-2">No skills data yet.</p>
+                  <p className="text-sm text-muted-foreground">Add your skills in the Admin Panel to showcase your expertise here.</p>
+                </CardContent>
+              </Card>
+            )}
           </div>
           </div>
-        </section>
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default About;
+         </section>
+         </div>
+       </div>
+     </>
+   );
+ };
+ 
+ export default About;

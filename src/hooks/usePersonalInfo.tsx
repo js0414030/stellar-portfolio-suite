@@ -6,6 +6,12 @@ interface Stat {
   value: string;
 }
 
+interface Service {
+  title: string;
+  description: string;
+  technologies: string[];
+}
+
 export interface PersonalInfo {
   id: string;
   full_name: string;
@@ -15,9 +21,13 @@ export interface PersonalInfo {
   resume_url?: string;
   github_url?: string;
   linkedin_url?: string;
+  twitter_url?: string;
   email?: string;
+  phone?: string;
+  location?: string;
   roles: string[];
   stats: Stat[];
+  services: Service[];
   created_at: string;
   updated_at: string;
 }
@@ -43,11 +53,15 @@ export const usePersonalInfo = () => {
       if (data) {
         setPersonalInfo({
           ...data,
-          stats: (data.stats as unknown) as Stat[]
+          stats: (data.stats as unknown) as Stat[] || [],
+          services: (data.services as unknown) as Service[] || []
         });
+      } else {
+        setPersonalInfo(null);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch personal info');
+      setPersonalInfo(null);
       console.error('Error fetching personal info:', err);
     } finally {
       setLoading(false);

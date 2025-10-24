@@ -102,20 +102,20 @@ const Projects = () => {
                 {/* Featured Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto reveal">
                   <div className="glass p-4 rounded-xl">
-                    <div className="text-2xl font-bold gradient-text">50+</div>
-                    <div className="text-sm text-muted-foreground">Projects</div>
+                    <div className="text-2xl font-bold gradient-text">{totalCount}</div>
+                    <div className="text-sm text-muted-foreground">Total Projects</div>
                   </div>
                   <div className="glass p-4 rounded-xl">
-                    <div className="text-2xl font-bold gradient-text">5</div>
-                    <div className="text-sm text-muted-foreground">Years</div>
+                    <div className="text-2xl font-bold gradient-text">{projects.filter(p => p.featured).length}</div>
+                    <div className="text-sm text-muted-foreground">Featured</div>
                   </div>
                   <div className="glass p-4 rounded-xl">
-                    <div className="text-2xl font-bold gradient-text">20+</div>
+                    <div className="text-2xl font-bold gradient-text">{allTags.length - 1}</div>
                     <div className="text-sm text-muted-foreground">Technologies</div>
                   </div>
                   <div className="glass p-4 rounded-xl">
-                    <div className="text-2xl font-bold gradient-text">30+</div>
-                    <div className="text-sm text-muted-foreground">Happy Clients</div>
+                    <div className="text-2xl font-bold gradient-text">{new Set(projects.map(p => p.category)).size}</div>
+                    <div className="text-sm text-muted-foreground">Categories</div>
                   </div>
                 </div>
               </div>
